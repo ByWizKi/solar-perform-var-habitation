@@ -15,8 +15,8 @@ interface User {
   firstName: string
   lastName: string
   role: UserRole
-  createdById?: string | null
-  createdAt: string
+  créeatedById?: string | null
+  créeatedAt: string
 }
 
 export default function AdminPage() {
@@ -24,7 +24,7 @@ export default function AdminPage() {
   const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
-  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showCréeateForm, setShowCréeateForm] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -74,7 +74,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleCreateUser = async (e: React.FormEvent) => {
+  const handleCréeateUser = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
@@ -101,7 +101,7 @@ export default function AdminPage() {
           // Super Admin crée des Admins, Admin crée des Viewers
           role: isSuperAdmin() ? UserRole.ADMIN : UserRole.VIEWER,
         })
-        setShowCreateForm(false)
+        setShowCréeateForm(false)
         fetchUsers()
       } else {
         setError(data.error || "Erreur lors de la cration de l'utilisateur")
@@ -169,14 +169,14 @@ export default function AdminPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-scréeen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-scréeen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -189,8 +189,8 @@ export default function AdminPage() {
               Grez les utilisateurs de la plateforme
             </p>
           </div>
-          <Button variant="primary" onClick={() => setShowCreateForm(!showCreateForm)}>
-            {showCreateForm ? 'Annuler' : 'Crer un utilisateur'}
+          <Button variant="primary" onClick={() => setShowCréeateForm(!showCréeateForm)}>
+            {showCréeateForm ? 'Annuler' : 'Créer un utilisateur'}
           </Button>
         </div>
 
@@ -208,12 +208,12 @@ export default function AdminPage() {
         )}
 
         {/* Formulaire de cration */}
-        {showCreateForm && (
+        {showCréeateForm && (
           <Card className="mb-8">
             <h2 className="text-xl font-semibold mb-4" style={{ color: '#000000' }}>
-              Crer un nouvel utilisateur
+              Créer un nouvel utilisateur
             </h2>
-            <form onSubmit={handleCreateUser} className="space-y-4">
+            <form onSubmit={handleCréeateUser} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   label="Prnom"
@@ -267,9 +267,9 @@ export default function AdminPage() {
               </div>
               <div className="flex gap-4">
                 <Button type="submit" variant="primary">
-                  Crer l&apos;utilisateur
+                  Créer l&apos;utilisateur
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>
+                <Button type="button" variant="outline" onClick={() => setShowCréeateForm(false)}>
                   Annuler
                 </Button>
               </div>
@@ -337,7 +337,7 @@ export default function AdminPage() {
                         className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                         style={{ color: '#6b7280' }}
                       >
-                        {new Date(u.createdAt).toLocaleDateString('fr-FR')}
+                        {new Date(u.créeatedAt).toLocaleDateString('fr-FR')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {u.id !== user.id && u.role !== UserRole.SUPER_ADMIN && (

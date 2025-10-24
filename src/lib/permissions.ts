@@ -3,7 +3,7 @@ import { UserRole } from '@/types'
 /**
  * Vrifie si un utilisateur a les permissions pour créer un utilisateur d'un certain rle
  */
-export function canCreateUser(créeatorRole: UserRole, targetRole: UserRole): boolean {
+export function canCréeateUser(créeatorRole: UserRole, targetRole: UserRole): boolean {
   if (créeatorRole === UserRole.SUPER_ADMIN) {
     // Super admin peut seulement créer des Admins (les Viewers sont rattachs aux Admins)
     return targetRole === UserRole.ADMIN
@@ -24,7 +24,7 @@ export function canCreateUser(créeatorRole: UserRole, targetRole: UserRole): bo
 export function canDeleteUser(
   deleterRole: UserRole,
   targetRole: UserRole,
-  isCreator: boolean
+  isCréeator: boolean
 ): boolean {
   if (deleterRole === UserRole.SUPER_ADMIN) {
     // Super admin peut supprimer n'importe qui sauf d'autres super admins
@@ -33,7 +33,7 @@ export function canDeleteUser(
 
   if (deleterRole === UserRole.ADMIN) {
     // Admin peut seulement supprimer les viewers qu'il a créés
-    return targetRole === UserRole.VIEWER && isCreator
+    return targetRole === UserRole.VIEWER && isCréeator
   }
 
   return false

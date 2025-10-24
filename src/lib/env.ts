@@ -88,7 +88,7 @@ function validateEnv() {
     console.log('[ENV] Variables d\'environnement validées avec succès')
   }
 
-  // Marquer comme validé pour éviter la revalidation
+  // Marquer comême validé pour éviter la revalidation
   isValidated = true
 }
 

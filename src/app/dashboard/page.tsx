@@ -171,7 +171,7 @@ export default function DashboardPage() {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la vrification des mises à jour:', error)
+      console.error('Erreur lors de la vérification des mises à jour:', error)
     }
     return false
   }, [accessToken, lastSyncTimestamp, isAdmin])
@@ -235,7 +235,7 @@ export default function DashboardPage() {
 
         if (refreshRes.ok) {
           const refreshData = await refreshRes.json()
-          console.log('[OK] Donnes synchronises depuis Enphase')
+          console.log('[OK] Données synchronises depuis Enphase')
 
           // Mettre  jour le compteur d'actualisations
           if (refreshData.refreshCount !== undefined) {
@@ -247,15 +247,15 @@ export default function DashboardPage() {
         } else {
           const errorData = await refreshRes.json()
           if (refreshRes.status === 429) {
-            // IMPORTANT: Mettre  jour le compteur mme en cas d'erreur 429
+            // IMPORTANT: Mettre  jour le compteur même en cas d'erreur 429
             setRefreshCount(maxRefreshes)
             alert(errorData.message || 'Limite quotidienne atteinte')
-            // Ne pas return, on charge quand mme les données existantes
+            // Ne pas return, on charge quand même les données existantes
           }
         }
       }
 
-      // Ensuite, rcuprer les stats mises à jour (mme si refresh a chou)
+      // Ensuite, rcuprer les stats mises à jour (même si refresh a chou)
       await fetchStats()
       await fetchHistory()
     } catch (error) {
@@ -302,15 +302,15 @@ export default function DashboardPage() {
         handleRefresh()
       }, 60 * 60 * 1000) // 1 heure
     } else {
-      // Viewer : Vrification légère toutes les 5 secondes (juste le timestamp)
+      // Viewer : Vérification légère toutes les 5 secondes (juste le timestamp)
       intervalId = setInterval(async () => {
         const hasUpdates = await checkForUpdates()
         if (hasUpdates) {
-          // Recharger les données si changement dtect
+          // Recharger les données si changement détecté
           await fetchStats()
           await fetchHistory()
         }
-      }, 5 * 1000) // 5 secondes - requte trs légère
+      }, 5 * 1000) // 5 secondes - requête très légère
     }
 
     // Nettoyer l'intervalle quand le composant est dmont
@@ -321,14 +321,14 @@ export default function DashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-scréeen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-scréeen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -374,7 +374,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Dernière mise  jour - Mise en vidence */}
+        {/* Dernière mise à jour - Mise en vidence */}
         {stats && stats.lastUpdate && (
           <Card className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center justify-between">
@@ -435,7 +435,7 @@ export default function DashboardPage() {
             <div className="text-center py-8">
               <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connect</h3>
               <p className="text-blue-700 mb-4">
-                Connectez votre système Enphase pour commencer suivre votre production solaire.
+                Connectez votre système Enphase pour comêmencer suivre votre production solaire.
               </p>
               <Button variant="primary" onClick={() => router.push('/connections')}>
                 Connecter un système
@@ -518,7 +518,7 @@ export default function DashboardPage() {
               </Card>
             )}
 
-            {/* Fun Facts écologiques - Bass sur la production du jour */}
+            {/* Fun Facts éécologiques - Basé sur la production du jour */}
             {stats && stats.today.production > 0 && (
               <div className="mb-8">
                 <Suspense
@@ -652,7 +652,7 @@ export default function DashboardPage() {
         {/* Résumé du système - Responsive */}
         {stats && (
           <div className="mt-8">
-            <Card title="Résumé du Systme">
+            <Card title="Résumé du Système">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex justify-between items-center">

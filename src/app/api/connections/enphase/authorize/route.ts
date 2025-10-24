@@ -7,7 +7,7 @@ async function handler(req: AuthRequest) {
   try {
     const { userId } = getUserFromRequest(req)
 
-    // Vrifier si l'utilisateur a dj une connexion Enphase active
+    // Vérifier si l'utilisateur a dj une connexion Enphase active
     const existingConnection = await prisma.enphaseConnection.findFirst({
       where: {
         userId,

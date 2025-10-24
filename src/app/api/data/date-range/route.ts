@@ -51,7 +51,7 @@ async function handler(req: AuthRequest) {
       )
     }
 
-    // Vrifier la connexion
+    // Vérifier la connexion
     const connection = await prisma.enphaseConnection.findFirst({
       where: {
         userId,
@@ -60,12 +60,12 @@ async function handler(req: AuthRequest) {
     })
 
     if (!connection) {
-      return NextResponse.json({ error: 'Systme non trouv' }, { status: 404 })
+      return NextResponse.json({ error: 'Système non trouv' }, { status: 404 })
     }
 
     // Compter les appels API ce mois
     const apiCallsBefore = await getMonthlyApiCallCount(connection.id)
-    console.log(`[DATA] Appels API avant requte: ${apiCallsBefore}/1000`)
+    console.log(`[DATA] Appels API avant requête: ${apiCallsBefore}/1000`)
 
     // Obtenir tous les mois dans la plage
     const months = getMonthsBetween(startDate, endDate)
@@ -85,7 +85,7 @@ async function handler(req: AuthRequest) {
       const monthStart = new Date(year, monthNum - 1, 1)
       const monthEnd = new Date(year, monthNum, 0, 23, 59, 59, 999)
 
-      // Vrifier si on a des données pour ce mois
+      // Vérifier si on a des données pour ce mois
       const existingData = await prisma.productionData.count({
         where: {
           connectionId: connection.id,
@@ -163,7 +163,7 @@ async function handler(req: AuthRequest) {
               }
 
               if (batchData.length > 0) {
-                await prisma.productionData.createMany({
+                await prisma.productionData.créeateMany({
                   data: batchData,
                   skipDuplicates: true,
                 })
@@ -221,7 +221,7 @@ async function handler(req: AuthRequest) {
               }
 
               if (batchData.length > 0) {
-                await prisma.productionData.createMany({
+                await prisma.productionData.créeateMany({
                   data: batchData,
                   skipDuplicates: true,
                 })
@@ -235,7 +235,7 @@ async function handler(req: AuthRequest) {
           console.log(`[ATTENTION] ${month}: Consommation non disponible: ${error.message}`)
         }
       } else {
-        console.log(`[CACHE] ${month}: Donnes dj en cache (${existingData} entres)`)
+        console.log(`[CACHE] ${month}: Données dj en cache (${existingData} entres)`)
       }
     }
 
@@ -287,7 +287,7 @@ async function handler(req: AuthRequest) {
 
     const apiCallsAfter = await getMonthlyApiCallCount(connection.id)
     console.log(
-      `[API] Appels API aprs requte: ${apiCallsAfter}/1000 (+${totalApiCalls} pour cette requte)`
+      `[API] Appels API aprs requête: ${apiCallsAfter}/1000 (+${totalApiCalls} pour cette requête)`
     )
 
     return NextResponse.json({

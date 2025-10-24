@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
-import { canCreateUser } from '@/lib/permissions'
+import { canCréeateUser } from '@/lib/permissions'
 import { UserRole } from '@/types'
 
 // GET /api/admin/users - Lister les utilisateurs
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // Super admin peut voir tous les utilisateurs
     // Admin peut voir seulement les utilisateurs qu'il a créés
-    const where = currentUser.role === UserRole.SUPER_ADMIN ? {} : { createdById: currentUser.id }
+    const where = currentUser.role === UserRole.SUPER_ADMIN ? {} : { créeatedById: currentUser.id }
 
     const users = await prisma.user.findMany({
       where,
@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
         firstName: true,
         lastName: true,
         role: true,
-        createdById: true,
-        createdAt: true,
+        créeatedById: true,
+        créeatedAt: true,
         updatedAt: true,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { créeatedAt: 'desc' },
     })
 
     return NextResponse.json({ users })
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/admin/users - Crer un utilisateur
+// POST /api/admin/users - Créer un utilisateur
 export async function POST(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -90,15 +90,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Tous les champs sont requis' }, { status: 400 })
     }
 
-    // Vrifier les permissions
-    if (!canCreateUser(currentUser.role as UserRole, role as UserRole)) {
+    // Vérifier les permissions
+    if (!canCréeateUser(currentUser.role as UserRole, role as UserRole)) {
       return NextResponse.json(
         { error: "Vous n'avez pas la permission de créer ce type d'utilisateur" },
         { status: 403 }
       )
     }
 
-    // Vrifier si le nom d'utilisateur existe dj
+    // Vérifier si le nom d'utilisateur existe dj
     const existingUser = await prisma.user.findUnique({
       where: { username },
     })
@@ -113,15 +113,15 @@ export async function POST(request: NextRequest) {
     // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Crer l'utilisateur
-    const user = await prisma.user.create({
+    // Créer l'utilisateur
+    const user = await prisma.user.créeate({
       data: {
         username,
         password: hashedPassword,
         firstName,
         lastName,
         role: role as UserRole,
-        createdById: currentUser.id,
+        créeatedById: currentUser.id,
       },
       select: {
         id: true,
@@ -129,8 +129,8 @@ export async function POST(request: NextRequest) {
         firstName: true,
         lastName: true,
         role: true,
-        createdById: true,
-        createdAt: true,
+        créeatedById: true,
+        créeatedAt: true,
         updatedAt: true,
       },
     })

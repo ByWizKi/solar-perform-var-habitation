@@ -14,7 +14,7 @@ async function handler(req: AuthRequest) {
       return NextResponse.json({ error: 'systemId requis' }, { status: 400 })
     }
 
-    // Vrifier que l'utilisateur a accs  ce système
+    // Vérifier que l'utilisateur a accs  ce système
     let connection = await prisma.enphaseConnection.findFirst({
       where: {
         userId,
@@ -31,14 +31,14 @@ async function handler(req: AuthRequest) {
     if (!connection) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { role: true, createdById: true },
+        select: { role: true, créeatedById: true },
       })
 
-      if (user?.role === 'VIEWER' && user.createdById) {
+      if (user?.role === 'VIEWER' && user.créeatedById) {
         // Le viewer peut accder aux données de son crateur (admin)
         connection = await prisma.enphaseConnection.findFirst({
           where: {
-            userId: user.createdById,
+            userId: user.créeatedById,
             systemId,
           },
           select: {
@@ -50,7 +50,7 @@ async function handler(req: AuthRequest) {
       }
 
       if (!connection) {
-        return NextResponse.json({ error: 'Systme non trouv' }, { status: 404 })
+        return NextResponse.json({ error: 'Système non trouv' }, { status: 404 })
       }
     }
 
@@ -97,7 +97,7 @@ async function handler(req: AuthRequest) {
         console.log('\n' + '='.repeat(80))
         console.log(`[DATE] [STATS] Calcul production mensuelle - System ${systemId}`)
         console.log('='.repeat(80))
-        console.log(`[API] [API] Donnes dbut du mois manquantes  Rcupration Enphase`)
+        console.log(`[API] [API] Données dbut du mois manquantes  Récupération Enphase`)
         const enphaseService = getEnphaseService()
         const accessToken = await enphaseService.ensureValidToken(userId)
 
@@ -131,7 +131,7 @@ async function handler(req: AuthRequest) {
           if (daysSinceStart >= 0 && daysSinceStart < productionArray.length) {
             const firstDayLifetime = productionArray[daysSinceStart]
 
-            await prisma.productionData.create({
+            await prisma.productionData.créeate({
               data: {
                 connectionId: connection.id,
                 connectionType: 'enphase',
@@ -165,14 +165,14 @@ async function handler(req: AuthRequest) {
           }
         }
       } catch (error) {
-        console.error(`[ERREUR] [ERREUR] Rcupration dbut du mois:`, error)
+        console.error(`[ERREUR] [ERREUR] Récupération dbut du mois:`, error)
         console.log('='.repeat(80) + '\n')
       }
     } else {
       console.log('\n' + '='.repeat(80))
       console.log(`[DATE] [STATS] Calcul production mensuelle - System ${systemId}`)
       console.log('='.repeat(80))
-      console.log(`[CACHE] [CACHE] Donnes dbut du mois dj en base  0 appel API`)
+      console.log(`[CACHE] [CACHE] Données dbut du mois dj en base  0 appel API`)
       console.log('='.repeat(80) + '\n')
     }
 

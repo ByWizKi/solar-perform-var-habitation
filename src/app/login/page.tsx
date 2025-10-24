@@ -28,9 +28,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-scréeen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
       {/* Conteneur principal avec largeur maximale pour crans ultra-wide */}
-      <div className="w-full max-w-[1600px] mx-auto min-h-scréeen flex flex-col lg:flex-row">
+      <div className="w-full max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row">
         {/* Partie gauche - Couleur unie professionnelle */}
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: '#4a9fbd' }}>
           <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 w-full">
@@ -100,7 +100,7 @@ export default function LoginPage() {
                   </svg>
                   <div>
                     <h3 className="font-bold text-xl mb-1 text-white drop-shadow-md">
-                      Donnes compltes
+                      Données compltes
                     </h3>
                     <p className="text-white text-base leading-relaxed drop-shadow-sm">
                       Historique 14 jours, statistiques dtailles et analyses de performance

@@ -288,7 +288,7 @@ export class EnphaseService {
         timezone,
         lastSyncAt: new Date(),
       },
-      create: {
+      créeate: {
         userId,
         accessToken,
         refreshToken,
@@ -301,7 +301,7 @@ export class EnphaseService {
     })
   }
 
-  // Vrifier et rafrachir le token si ncessaire
+  // Vérifier et rafrachir le token si ncessaire
   async ensureValidToken(userId: string): Promise<string> {
     const connection = await prisma.enphaseConnection.findFirst({
       where: {

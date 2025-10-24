@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Vrifier le mot de passe
+    // Vérifier le mot de passe
     const isPasswordValid = await verifyPassword(validatedData.password, user.password)
 
     if (!isPasswordValid) {
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     if (error.name === 'ZodError') {
       return NextResponse.json(
-        { error: 'Donnes invalides', details: error.errors },
+        { error: 'Données invalides', details: error.errors },
         { status: 400 }
       )
     }

@@ -1,5 +1,5 @@
 import {
-  canCreateUser,
+  canCréeateUser,
   canDeleteUser,
   canRefreshData,
   canManageConnections,
@@ -7,23 +7,23 @@ import {
 import { UserRole } from '@/types'
 
 describe('Permissions', () => {
-  describe('canCreateUser', () => {
+  describe('canCréeateUser', () => {
     it('Super Admin peut créer uniquement des Admins', () => {
-      expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.ADMIN)).toBe(true)
-      expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.VIEWER)).toBe(false)
-      expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
+      expect(canCréeateUser(UserRole.SUPER_ADMIN, UserRole.ADMIN)).toBe(true)
+      expect(canCréeateUser(UserRole.SUPER_ADMIN, UserRole.VIEWER)).toBe(false)
+      expect(canCréeateUser(UserRole.SUPER_ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
     })
 
     it('Admin peut créer uniquement des Viewers', () => {
-      expect(canCreateUser(UserRole.ADMIN, UserRole.VIEWER)).toBe(true)
-      expect(canCreateUser(UserRole.ADMIN, UserRole.ADMIN)).toBe(false)
-      expect(canCreateUser(UserRole.ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
+      expect(canCréeateUser(UserRole.ADMIN, UserRole.VIEWER)).toBe(true)
+      expect(canCréeateUser(UserRole.ADMIN, UserRole.ADMIN)).toBe(false)
+      expect(canCréeateUser(UserRole.ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
     })
 
     it('Viewer ne peut créer personne', () => {
-      expect(canCreateUser(UserRole.VIEWER, UserRole.VIEWER)).toBe(false)
-      expect(canCreateUser(UserRole.VIEWER, UserRole.ADMIN)).toBe(false)
-      expect(canCreateUser(UserRole.VIEWER, UserRole.SUPER_ADMIN)).toBe(false)
+      expect(canCréeateUser(UserRole.VIEWER, UserRole.VIEWER)).toBe(false)
+      expect(canCréeateUser(UserRole.VIEWER, UserRole.ADMIN)).toBe(false)
+      expect(canCréeateUser(UserRole.VIEWER, UserRole.SUPER_ADMIN)).toBe(false)
     })
   })
 

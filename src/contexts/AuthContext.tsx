@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { créeateContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { User as UserType, UserRole } from '@/types'
 
@@ -20,7 +20,7 @@ interface AuthContextType {
   isViewer: () => boolean
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = créeateContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Vrifier si le changement de mot de passe est requis
+  // Vérifier si le changement de mot de passe est requis
   useEffect(() => {
     if (
       user &&
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, router])
 
-  // Vrifier priodiquement la validit du token
+  // Vérifier priodiquement la validit du token
   useEffect(() => {
     if (!accessToken || !user) return
 
@@ -72,12 +72,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (error) {
-        // Erreur rseau, on ignore pour ne pas dconnecter l'utilisateur
-        console.error('Erreur lors de la vrification du token:', error)
+        // Erreur réseau, on ignore pour ne pas dconnecter l'utilisateur
+        console.error('Erreur lors de la vérification du token:', error)
       }
     }
 
-    // Vrifier toutes les 5 minutes
+    // Vérifier toutes les 5 minutes
     const interval = setInterval(checkTokenValidity, 5 * 60 * 1000)
 
     return () => clearInterval(interval)
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccessToken(data.accessToken)
     setUser(data.user)
 
-    // Vrifier si le changement de mot de passe est requis
+    // Vérifier si le changement de mot de passe est requis
     if (data.user.mustChangePassword) {
       router.push('/change-password-required')
     } else {
@@ -235,7 +235,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await fetchUserProfile(accessToken)
   }
 
-  // Fonctions de vrification de rle
+  // Fonctions de vérification de rle
   const isSuperAdmin = () => user?.role === UserRole.SUPER_ADMIN
   const isAdmin = () => user?.role === UserRole.ADMIN || user?.role === UserRole.SUPER_ADMIN
   const isViewer = () => user?.role === UserRole.VIEWER

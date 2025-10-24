@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'systemId requis' }, { status: 400 })
     }
 
-    // Vrifier que l'utilisateur a accs  ce système
+    // Vérifier que l'utilisateur a accs  ce système
     let connection = await prisma.enphaseConnection.findFirst({
       where: {
         userId: payload.userId,
@@ -45,17 +45,17 @@ export async function GET(request: NextRequest) {
       // Si l'utilisateur n'a pas directement la connexion, vérifier si c'est un visualisateur
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
-        select: { role: true, createdById: true },
+        select: { role: true, créeatedById: true },
       })
 
-      if (!user || !user.createdById) {
+      if (!user || !user.créeatedById) {
         return NextResponse.json({ error: 'Accs non autoris' }, { status: 403 })
       }
 
-      // Vrifier que le crateur a cette connexion
+      // Vérifier que le crateur a cette connexion
       connection = await prisma.enphaseConnection.findFirst({
         where: {
-          userId: user.createdById,
+          userId: user.créeatedById,
           systemId,
         },
       })
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Vrifier quels jours manquent
+    // Vérifier quels jours manquent
     const missingDays = last14Days.filter((day) => !dataByDay.has(day))
 
     console.log('\n' + '='.repeat(80))
@@ -120,13 +120,13 @@ export async function GET(request: NextRequest) {
     // [ATTENTION] RGLE IMPORTANTE : Appel API UNIQUEMENT si des données manquent !
     if (missingDays.length > 0) {
       console.log(
-        `\n[API] [API] Rcupration depuis Enphase (1 requte pour ${missingDays.length} jours)`
+        `\n[API] [API] Récupération depuis Enphase (1 requête pour ${missingDays.length} jours)`
       )
       const enphaseService = getEnphaseService()
       const accessToken = await enphaseService.ensureValidToken(payload.userId)
 
       try {
-        // UNE SEULE requte pour rcuprer toutes les données
+        // UNE SEULE requête pour rcuprer toutes les données
         // L'API Enphase retourne toujours 888 jours, peu importe les dates demandes
         const lifetimeData = await enphaseService.getProductionData(
           systemId,
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
           new Date(last14Days[last14Days.length - 1])
         )
 
-        // Vrifier le format
+        // Vérifier le format
         if (!lifetimeData?.production || !Array.isArray(lifetimeData.production)) {
           console.error('[ERREUR] Format de rponse Enphase invalide')
           return NextResponse.json({
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
             (targetDate.getTime() - apiStartDate.getTime()) / (1000 * 60 * 60 * 24)
           )
 
-          // Vrifier que l'index est valide
+          // Vérifier que l'index est valide
           if (daysSinceStart < 0 || daysSinceStart >= productionArray.length) {
             console.warn(`  [ATTENTION] [SKIP] ${dateKey}: Index ${daysSinceStart} hors limites`)
             continue
@@ -183,9 +183,9 @@ export async function GET(request: NextRequest) {
           // Ce n'est PAS cumulatif, contrairement  ce que le nom 'energy_lifetime' suggre !
           const productionToday = productionArray[daysSinceStart]
 
-          // Stocker en base mme si production = 0 (jour sans soleil)
+          // Stocker en base même si production = 0 (jour sans soleil)
           try {
-            await prisma.productionData.create({
+            await prisma.productionData.créeate({
               data: {
                 connectionId: connection.id,
                 connectionType: 'enphase',
@@ -222,7 +222,7 @@ export async function GET(request: NextRequest) {
         )
         console.log('='.repeat(80) + '\n')
       } catch (error: any) {
-        console.error(`\n[ERREUR] [ERREUR] Rcupration Enphase: ${error.message}`)
+        console.error(`\n[ERREUR] [ERREUR] Récupération Enphase: ${error.message}`)
         console.log('='.repeat(80) + '\n')
       }
     } else {

@@ -21,14 +21,14 @@ async function handler(req: AuthRequest) {
       return NextResponse.json({ error: 'Utilisateur non trouv' }, { status: 404 })
     }
 
-    // Vrifier le mot de passe actuel
+    // Vérifier le mot de passe actuel
     const isPasswordValid = await verifyPassword(validatedData.currentPassword, user.password)
 
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Mot de passe actuel incorrect' }, { status: 400 })
     }
 
-    // Vrifier que le nouveau mot de passe est diffrent
+    // Vérifier que le nouveau mot de passe est diffrent
     const isSamePassword = await verifyPassword(validatedData.newPassword, user.password)
 
     if (isSamePassword) {
@@ -56,7 +56,7 @@ async function handler(req: AuthRequest) {
   } catch (error: any) {
     if (error.name === 'ZodError') {
       return NextResponse.json(
-        { error: 'Donnes invalides', details: error.errors },
+        { error: 'Données invalides', details: error.errors },
         { status: 400 }
       )
     }

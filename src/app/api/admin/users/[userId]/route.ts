@@ -31,18 +31,18 @@ export async function DELETE(request: NextRequest, { params }: { params: { userI
     // Rcuprer l'utilisateur  supprimer
     const userToDelete = await prisma.user.findUnique({
       where: { id: params.userId },
-      select: { id: true, role: true, createdById: true },
+      select: { id: true, role: true, créeatedById: true },
     })
 
     if (!userToDelete) {
       return NextResponse.json({ error: 'Utilisateur non trouv' }, { status: 404 })
     }
 
-    // Vrifier si c'est le crateur
-    const isCreator = userToDelete.createdById === currentUser.id
+    // Vérifier si c'est le crateur
+    const isCréeator = userToDelete.créeatedById === currentUser.id
 
-    // Vrifier les permissions
-    if (!canDeleteUser(currentUser.role as UserRole, userToDelete.role as UserRole, isCreator)) {
+    // Vérifier les permissions
+    if (!canDeleteUser(currentUser.role as UserRole, userToDelete.role as UserRole, isCréeator)) {
       return NextResponse.json(
         { error: "Vous n'avez pas la permission de supprimer cet utilisateur" },
         { status: 403 }
@@ -96,8 +96,8 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
         firstName: true,
         lastName: true,
         role: true,
-        createdById: true,
-        createdAt: true,
+        créeatedById: true,
+        créeatedAt: true,
         updatedAt: true,
       },
     })
@@ -106,8 +106,8 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       return NextResponse.json({ error: 'Utilisateur non trouv' }, { status: 404 })
     }
 
-    // Vrifier que l'utilisateur peut voir cet utilisateur
-    if (currentUser.role !== UserRole.SUPER_ADMIN && user.createdById !== currentUser.id) {
+    // Vérifier que l'utilisateur peut voir cet utilisateur
+    if (currentUser.role !== UserRole.SUPER_ADMIN && user.créeatedById !== currentUser.id) {
       return NextResponse.json(
         { error: "Vous n'avez pas la permission de voir cet utilisateur" },
         { status: 403 }

@@ -14,7 +14,7 @@ interface Connection {
   systemId?: string
   isActive: boolean
   lastSyncAt?: string
-  createdAt: string
+  créeatedAt: string
 }
 
 export default function ConnectionsPage() {
@@ -151,7 +151,7 @@ export default function ConnectionsPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-scréeen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
@@ -174,7 +174,7 @@ export default function ConnectionsPage() {
   }
 
   return (
-    <div className="min-h-scréeen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -222,7 +222,7 @@ export default function ConnectionsPage() {
                     {isConnected && connection ? (
                       <div className="space-y-2">
                         {connection.systemId && (
-                          <p className="text-xs text-gray-500">Systme ID: {connection.systemId}</p>
+                          <p className="text-xs text-gray-500">Système ID: {connection.systemId}</p>
                         )}
                         {connection.lastSyncAt && (
                           <p className="text-xs text-gray-500">
@@ -297,7 +297,7 @@ export default function ConnectionsPage() {
               <p className="mt-1 text-sm text-gray-500" style={{ color: '#6b7280' }}>
                 {user?.role === 'ADMIN'
                   ? 'Redirection vers la connexion Enphase...'
-                  : 'Connectez votre premier système solaire pour commencer.'}
+                  : 'Connectez votre premier système solaire pour comêmencer.'}
               </p>
               {user?.role === 'ADMIN' && (
                 <div className="mt-4">
@@ -323,7 +323,7 @@ export default function ConnectionsPage() {
           title="Dconnecter le service"
           description={`Vous tes sur le point de supprimer votre connexion ${connectionToDelete.service.toUpperCase()}. Cette action est irrversible.`}
           warningMessage={`Toutes les données collectes depuis le ${new Date(
-            connectionToDelete.createdAt
+            connectionToDelete.créeatedAt
           ).toLocaleDateString(
             'fr-FR'
           )} seront définitivement supprimées de la base de données. Cette action ne peut pas être annulée.`}

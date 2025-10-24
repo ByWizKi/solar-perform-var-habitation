@@ -23,10 +23,10 @@ export async function withAuth(
 
     const token = authHeader.substring(7) // Enlever "Bearer "
 
-    // Vrifier le token
+    // Vérifier le token
     const payload = verifyAccessToken(token)
 
-    // Ajouter les infos user  la requte
+    // Ajouter les infos user  la requête
     const authReq = req as AuthRequest
     authReq.user = payload
 
@@ -37,7 +37,7 @@ export async function withAuth(
   }
 }
 
-// Helper pour extraire l'utilisateur de la requte
+// Helper pour extraire l'utilisateur de la requête
 export function getUserFromRequest(req: AuthRequest) {
   if (!req.user) {
     throw new Error('Utilisateur non authentifi')

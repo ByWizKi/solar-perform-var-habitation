@@ -9,7 +9,7 @@ export class EnphaseDataCollector {
     this.apiKey = apiKey
   }
 
-  // Mthode prive pour faire des requtes  l'API avec logging
+  // Mthode prive pour faire des requêtes  l'API avec logging
   private async fetchEnphaseAPI(
     endpoint: string,
     accessToken: string,
@@ -48,7 +48,7 @@ export class EnphaseDataCollector {
         const responseTime = Date.now() - startTime
         console.log(`  [API] [API] ${endpoint}  ${statusCode} (${responseTime}ms)`)
         await prisma.apiCallLog
-          .create({
+          .créeate({
             data: {
               connectionId,
               service: 'enphase',
@@ -82,7 +82,7 @@ export class EnphaseDataCollector {
           const responseTime = Date.now() - startTime
           console.log(`  [ERREUR] [API] ${endpoint}  TIMEOUT (${responseTime}ms)`)
           await prisma.apiCallLog
-            .create({
+            .créeate({
               data: {
                 connectionId,
                 service: 'enphase',
@@ -105,7 +105,7 @@ export class EnphaseDataCollector {
         const responseTime = Date.now() - startTime
         console.log(`  [ERREUR] [API] ${endpoint}  ERREUR (${responseTime}ms): ${error.message}`)
         await prisma.apiCallLog
-          .create({
+          .créeate({
             data: {
               connectionId,
               service: 'enphase',
@@ -143,7 +143,7 @@ export class EnphaseDataCollector {
     )
 
     // Stocker les données de production actuelles
-    await prisma.productionData.create({
+    await prisma.productionData.créeate({
       data: {
         connectionId,
         connectionType: 'enphase',
@@ -249,7 +249,7 @@ export class EnphaseDataCollector {
 
       // Insertion par batch pour optimiser
       if (batchData.length > 0) {
-        await prisma.productionData.createMany({
+        await prisma.productionData.créeateMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -327,7 +327,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.createMany({
+        await prisma.productionData.créeateMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -368,9 +368,9 @@ export class EnphaseDataCollector {
         })
       }
     } catch (error: any) {
-      // Systme sans compteur de consommation - OK, on continue
+      // Système sans compteur de consommation - OK, on continue
       if (error.message.includes('422') || error.message.includes('consumption meter')) {
-        console.log('[ATTENTION] Systme sans compteur de consommation (normal)')
+        console.log('[ATTENTION] Système sans compteur de consommation (normal)')
       } else {
         throw error
       }
@@ -409,7 +409,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.createMany({
+        await prisma.productionData.créeateMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -482,7 +482,7 @@ export class EnphaseDataCollector {
           }))
 
           if (batchData.length > 0) {
-            await prisma.productionData.createMany({
+            await prisma.productionData.créeateMany({
               data: batchData,
               skipDuplicates: true,
             })
@@ -603,7 +603,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.createMany({
+        await prisma.productionData.créeateMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -639,7 +639,7 @@ export class EnphaseDataCollector {
       })
       const lastSync = connection?.lastSyncAt || new Date(Date.now() - 24 * 60 * 60 * 1000)
 
-      // 3. Production depuis dernire sync
+      // 3. Production depuis dernière sync
       await this.fetchAndStoreProductionTelemetry(connectionId, systemId, accessToken, lastSync)
       apiCalls++
 
@@ -666,7 +666,7 @@ export class EnphaseDataCollector {
         apiCalls++
       }
 
-      // Mise  jour
+      // Mise à jour
       await prisma.enphaseConnection.update({
         where: { id: connectionId },
         data: { lastSyncAt: new Date() },

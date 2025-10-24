@@ -11,7 +11,7 @@ async function handler(req: AuthRequest, { params }: { params: { connectionId: s
     const { searchParams } = new URL(req.url)
     const fullSync = searchParams.get('full') === 'true'
 
-    // Vrifier que la connexion appartient  l'utilisateur
+    // Vérifier que la connexion appartient  l'utilisateur
     const connection = await prisma.enphaseConnection.findFirst({
       where: {
         id: connectionId,
@@ -27,7 +27,7 @@ async function handler(req: AuthRequest, { params }: { params: { connectionId: s
       return NextResponse.json({ error: 'Aucun système associ' }, { status: 400 })
     }
 
-    // Vrifier et rafrachir le token si ncessaire
+    // Vérifier et rafrachir le token si ncessaire
     const enphaseService = getEnphaseService()
     const accessToken = await enphaseService.ensureValidToken(userId)
 

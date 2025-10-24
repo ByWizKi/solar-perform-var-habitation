@@ -3,8 +3,8 @@
 import { memo, useMemo } from 'react'
 
 interface EcoFactsProps {
-  energyTodayWh: number // énergie produite aujourd'hui en Wh
-  lifetimeEnergyWh?: number // Optionnel: énergie totale pour comparaison
+  energyTodayWh: number // éénergie produite aujourd'hui en Wh
+  lifetimeEnergyWh?: number // Optionnel: éénergie totale pour comparaison
 }
 
 // Prix du kWh en euros (identique au dashboard)
@@ -16,14 +16,14 @@ function EcoFactsComponent({ energyTodayWh, lifetimeEnergyWh }: EcoFactsProps) {
     const kWh = energyTodayWh / 1000
     const lifetimeKWh = lifetimeEnergyWh ? lifetimeEnergyWh / 1000 : 0
 
-    // Calculs bass sur des données réelles
+    // Calculs basé sur des données réelles
     const co2Saved = kWh * 0.5 // 0.5 kg CO2 par kWh (moyenne mix nergtique)
     const eurosEarned = (kWh * PRIX_KWH_EURO).toFixed(2) // Tarif moyen lectricit en France
     const phoneCharges = Math.floor(kWh * 200) // 5 Wh par charge de smartphone
     const teslaCharges = (kWh / 100).toFixed(2) // Tesla Model S = 100 kWh
     const kmElectricCar = Math.floor(kWh * 5) // ~5 km par kWh pour une voiture lectrique
     const treesEquivalent = (co2Saved / 25).toFixed(1) // Un arbre absorbe ~25 kg CO2/an
-    const houseDays = (kWh / 10).toFixed(1) // Une maison consomme ~10 kWh/jour en moyenne
+    const houseDays = (kWh / 10).toFixed(1) // Une maison consomême ~10 kWh/jour en moyenne
     const ledHours = Math.floor(kWh * 100) // LED 10W = 100 heures par kWh
     const laptopHours = Math.floor(kWh * 16) // Laptop 60W = ~16h par kWh
 
@@ -173,7 +173,7 @@ function EcoFactsComponent({ energyTodayWh, lifetimeEnergyWh }: EcoFactsProps) {
       <div className="mt-4 p-3 bg-white rounded-lg border border-green-200">
         <p className="text-xs text-gray-600 text-center">
           🌍 Aujourd&apos;hui, vous avez évité {calculations.co2Saved.toFixed(2)} kg de CO₂ !
-          Continuez comme ça pour un avenir plus propre et durable. 🌱
+          Continuez comême ça pour un avenir plus propre et durable. 🌱
         </p>
       </div>
     </div>

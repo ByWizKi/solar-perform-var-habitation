@@ -21,7 +21,7 @@ export async function logApiCall(
   responseTimeMs?: number
 ) {
   try {
-    await prisma.apiCallLog.create({
+    await prisma.apiCallLog.créeate({
       data: {
         connectionId,
         service: 'enphase',
@@ -86,7 +86,7 @@ export async function getCachedSystemInfo(
 
     if (connection && connection.systemName) {
       console.log(`[CACHE] Cache HIT: System info depuis connection`)
-      // Retourne les infos basiques, on fera quand mme un appel API pour les données temps réel
+      // Retourne les infos basiques, on fera quand même un appel API pour les données temps réel
       // Cette section est maintenant simplifie, on fait toujours un appel API pour les données fraches
     }
   }
@@ -148,7 +148,7 @@ export async function getCachedSystemDevices(
   const enphaseService = getEnphaseService()
 
   // Appel API direct (le cache des devices a t supprim du schma simplifi)
-  console.log(`[API] [API] Rcupration des devices pour système ${systemId}`)
+  console.log(`[API] [API] Récupération des devices pour système ${systemId}`)
   const startTime = Date.now()
 
   try {

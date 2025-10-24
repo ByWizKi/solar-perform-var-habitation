@@ -11,7 +11,7 @@ async function deleteHandler(req: AuthRequest, { params }: { params: { connectio
       return NextResponse.json({ error: 'ID de connexion manquant' }, { status: 400 })
     }
 
-    // Vrifier que la connexion appartient bien  l'utilisateur
+    // Vérifier que la connexion appartient bien  l'utilisateur
     const connection = await prisma.enphaseConnection.findFirst({
       where: {
         id: connectionId,
@@ -36,7 +36,7 @@ async function deleteHandler(req: AuthRequest, { params }: { params: { connectio
 
     // Log des données qui vont tre supprimées
     console.log(`[DELETE]  Suppression de la connexion Enphase (ID: ${connectionId})`)
-    console.log(`[DATA] Donnes  supprimer :`)
+    console.log(`[DATA] Données  supprimer :`)
     console.log(`   - ${connection._count.productionData} données de production`)
     console.log(`   - ${connection._count.apiCallLogs} logs d'appels API`)
 

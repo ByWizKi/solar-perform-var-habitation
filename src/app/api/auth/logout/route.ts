@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       message: 'Dconnexion russie',
     })
   } catch (error: any) {
-    // Mme si le token n'existe pas, on considre la dconnexion comme russie
+    // Même si le token n'existe pas, on considre la dconnexion comême russie
     if (error.code === 'P2025') {
       return NextResponse.json({
         message: 'Dconnexion russie',

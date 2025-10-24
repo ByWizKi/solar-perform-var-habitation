@@ -15,8 +15,8 @@ export interface User {
   mustChangePassword: boolean
   dailyRefreshCount: number
   lastRefreshDate?: Date | null
-  createdById?: string | null
-  createdAt: Date
+  créeatedById?: string | null
+  créeatedAt: Date
   updatedAt: Date
 }
 

@@ -33,7 +33,7 @@ export default function EnphaseAuthorizePage() {
 
         // Si dj connect, rediriger vers le dashboard
         if (data.alreadyConnected) {
-          console.log('[OK] Connexion Enphase existante dtecte, redirection...')
+          console.log('[OK] Connexion Enphase existante détectée, redirection...')
           router.push(data.redirectUrl || '/dashboard')
           return
         }
@@ -56,7 +56,7 @@ export default function EnphaseAuthorizePage() {
   }
 
   return (
-    <div className="min-h-scréeen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         <Card>
           <div className="text-center">

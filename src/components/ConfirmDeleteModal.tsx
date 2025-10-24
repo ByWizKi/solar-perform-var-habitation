@@ -102,7 +102,7 @@ export default function ConfirmDeleteModal({
               </div>
             </div>
 
-            {/* Dtails de ce qui sera supprim */}
+            {/* Détails de ce qui sera supprim */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <h4 className="text-sm font-semibold text-gray-900 mb-2">
                 Les lments suivants seront supprims :

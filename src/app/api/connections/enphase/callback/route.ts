@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     const tokens = await enphaseService.exchangeCodeForTokens(code)
 
     // Rcuprer TOUS les systèmes de l'utilisateur (avec pagination si ncessaire)
-    console.log('[SEARCH] Rcupration de la liste des systèmes Enphase...')
+    console.log('[SEARCH] Récupération de la liste des systèmes Enphase...')
     const allSystems = []
     let currentPage = 1
     let hasMorePages = true
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
           `[PAGE] Page ${currentPage}: ${systemsData.systems.length} systèmes rcuprs (total: ${allSystems.length}/${systemsData.total})`
         )
 
-        // Vrifier s'il y a d'autres pages
+        // Vérifier s'il y a d'autres pages
         hasMorePages = allSystems.length < systemsData.total
         currentPage++
       } else {

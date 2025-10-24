@@ -5,22 +5,22 @@ import { withAuth, getUserFromRequest, AuthRequest } from '@/lib/middleware'
 /**
  * GET /api/connections/check-updates
  * Endpoint ultra-lger pour vérifier si les données ont t mises à jour
- * Utilis par les Viewers pour dtecter les actualisations de l'Admin
+ * Utilis par les Viewers pour détectéer les actualisations de l'Admin
  */
 async function handler(req: AuthRequest) {
   try {
     const { userId } = getUserFromRequest(req)
 
-    // Vrifier si l'utilisateur est un viewer
+    // Vérifier si l'utilisateur est un viewer
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, createdById: true },
+      select: { role: true, créeatedById: true },
     })
 
     // Dterminer l'ID utilisateur pour rcuprer la connexion
-    const targetUserId = user?.role === 'VIEWER' && user.createdById ? user.createdById : userId
+    const targetUserId = user?.role === 'VIEWER' && user.créeatedById ? user.créeatedById : userId
 
-    // Rcuprer uniquement le timestamp de dernire synchronisation
+    // Rcuprer uniquement le timestamp de dernière synchronisation
     const connection = await prisma.enphaseConnection.findFirst({
       where: { userId: targetUserId, isActive: true },
       select: { lastSyncAt: true },
@@ -31,7 +31,7 @@ async function handler(req: AuthRequest) {
       lastSyncAt: connection?.lastSyncAt || null,
     })
   } catch (error) {
-    console.error('Erreur lors de la vrification des mises à jour:', error)
+    console.error('Erreur lors de la vérification des mises à jour:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

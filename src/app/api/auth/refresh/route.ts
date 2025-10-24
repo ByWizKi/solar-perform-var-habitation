@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     // Validation
     const validatedData = refreshTokenSchema.parse(body)
 
-    // Vrifier que le refresh token existe en DB
+    // Vérifier que le refresh token existe en DB
     const storedToken = await prisma.refreshToken.findUnique({
       where: { token: validatedData.refreshToken },
       include: {
@@ -36,13 +36,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Refresh token invalide' }, { status: 401 })
     }
 
-    // Vrifier que le token n'est pas expir
+    // Vérifier que le token n'est pas expir
     if (storedToken.expiresAt < new Date()) {
       await revokeRefreshToken(validatedData.refreshToken)
       return NextResponse.json({ error: 'Refresh token expir' }, { status: 401 })
     }
 
-    // Vrifier la signature du token
+    // Vérifier la signature du token
     try {
       verifyRefreshToken(validatedData.refreshToken)
     } catch (error) {
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     // Rvoquer l'ancien refresh token (avant de créer les nouveaux)
     await revokeRefreshToken(validatedData.refreshToken)
 
-    // Crer de nouveaux tokens
+    // Créer de nouveaux tokens
     const tokens = await créeateAuthTokens({
       id: storedToken.user.id,
       username: storedToken.user.username,
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     if (error.name === 'ZodError') {
       return NextResponse.json(
-        { error: 'Donnes invalides', details: error.errors },
+        { error: 'Données invalides', details: error.errors },
         { status: 400 }
       )
     }

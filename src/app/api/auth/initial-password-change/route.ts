@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Vrifier la complexit du mot de passe
+    // Vérifier la complexit du mot de passe
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
       return NextResponse.json(
         {
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         lastName: true,
         role: true,
         mustChangePassword: true,
-        createdAt: true,
+        créeatedAt: true,
         dailyRefreshCount: true,
         lastRefreshDate: true,
       },

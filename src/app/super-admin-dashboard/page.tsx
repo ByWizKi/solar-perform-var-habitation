@@ -101,14 +101,14 @@ export default function SuperAdminDashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-scréeen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-scréeen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -141,7 +141,7 @@ export default function SuperAdminDashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white">
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium opacity-90">Systmes actifs</span>
+                  <span className="text-sm font-medium opacity-90">Systèmes actifs</span>
                   <span className="text-4xl font-bold mt-2">{systems.length}</span>
                 </div>
               </Card>
@@ -171,7 +171,7 @@ export default function SuperAdminDashboardPage() {
 
             {/* Liste des systèmes */}
             <Card>
-              <h2 className="text-xl font-semibold mb-4">Systmes solaires</h2>
+              <h2 className="text-xl font-semibold mb-4">Systèmes solaires</h2>
               <div className="space-y-4">
                 {systems.map((system) => (
                   <div
@@ -185,7 +185,7 @@ export default function SuperAdminDashboardPage() {
                             className="text-lg font-semibold text-gray-900"
                             style={{ color: '#000000' }}
                           >
-                            {system.data?.systemName || `Systme ${system.systemId}`}
+                            {system.data?.systemName || `Système ${system.systemId}`}
                           </h3>
                           <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded">
                             {system.service}

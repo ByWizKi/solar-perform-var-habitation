@@ -24,7 +24,7 @@ async function handler(req: AuthRequest) {
       return NextResponse.json({ error: 'Utilisateur non trouv' }, { status: 404 })
     }
 
-    // Vrifier que l'utilisateur est admin (pas VIEWER)
+    // Vérifier que l'utilisateur est admin (pas VIEWER)
     if (user.role === 'VIEWER') {
       return NextResponse.json(
         { error: 'Seuls les administrateurs peuvent actualiser les données' },
@@ -32,7 +32,7 @@ async function handler(req: AuthRequest) {
       )
     }
 
-    // Vrifier la limite quotidienne (15 actualisations par jour pour les admins, pas de limite pour super admin)
+    // Vérifier la limite quotidienne (15 actualisations par jour pour les admins, pas de limite pour super admin)
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
@@ -42,7 +42,7 @@ async function handler(req: AuthRequest) {
     // Si c'est un nouveau jour, rinitialiser le compteur
     let currentRefreshCount = isNewDay ? 0 : user.dailyRefreshCount
 
-    // Vrifier la limite uniquement pour les admins (pas les super admins)
+    // Vérifier la limite uniquement pour les admins (pas les super admins)
     if (user.role === 'ADMIN' && currentRefreshCount >= 15) {
       return NextResponse.json(
         {
@@ -64,7 +64,7 @@ async function handler(req: AuthRequest) {
     })
 
     if (!connection) {
-      return NextResponse.json({ error: 'Systme non trouv' }, { status: 404 })
+      return NextResponse.json({ error: 'Système non trouv' }, { status: 404 })
     }
 
     // Compter les appels API avant le refresh
@@ -86,9 +86,9 @@ async function handler(req: AuthRequest) {
     // Rcuprer les dernières données depuis l'API Enphase
     const dataCollector = getEnphaseDataCollector()
 
-    console.log(`[SYNC] [API] Rcupration du summary Enphase...`)
+    console.log(`[SYNC] [API] Récupération du summary Enphase...`)
 
-    // Rcuprer le rsum du système (contient energyToday, powerNow, etc.)
+    // Rcuprer le résumé du système (contient energyToday, powerNow, etc.)
     await dataCollector.fetchAndStoreSystemSummary(connection.id, systemId, accessToken)
 
     // Compter les appels API aprs le refresh
@@ -96,7 +96,7 @@ async function handler(req: AuthRequest) {
     const newCalls = apiCallsAfter - apiCallsBefore
 
     console.log(
-      ` [SUCCESS] Donnes rafrachies (${newCalls} appel${newCalls > 1 ? 's' : ''} API utilis${
+      ` [SUCCESS] Données rafrachies (${newCalls} appel${newCalls > 1 ? 's' : ''} API utilis${
         newCalls > 1 ? 's' : ''
       })`
     )
@@ -130,7 +130,7 @@ async function handler(req: AuthRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Donnes actualises avec succs',
+      message: 'Données actualises avec succs',
       data: {
         energyToday: latestData?.energy || 0,
         powerNow: latestData?.power || 0,

@@ -65,7 +65,7 @@ export function verifyRefreshToken(token: string): TokenPayload {
 // Alias pour verifyAccessToken (pour compatibilit)
 export const verifyToken = verifyAccessToken
 
-// Cre une paire de tokens et stocke le refresh token
+// Crée une paire de tokens et stocke le refresh token
 export async function créeateAuthTokens(user: {
   id: string
   username: string
@@ -82,7 +82,7 @@ export async function créeateAuthTokens(user: {
   const expiresAt = new Date()
   expiresAt.setDate(expiresAt.getDate() + 30) // 30 jours
 
-  await prisma.refreshToken.create({
+  await prisma.refreshToken.créeate({
     data: {
       token: refreshToken,
       userId: user.id,
