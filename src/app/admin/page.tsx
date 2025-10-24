@@ -15,8 +15,8 @@ interface User {
   firstName: string
   lastName: string
   role: UserRole
-  créeatedById?: string | null
-  créeatedAt: string
+  createdById?: string | null
+  createdAt: string
 }
 
 export default function AdminPage() {
@@ -24,7 +24,7 @@ export default function AdminPage() {
   const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
-  const [showCréeateForm, setShowCréeateForm] = useState(false)
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -74,7 +74,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleCréeateUser = async (e: React.FormEvent) => {
+  const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
@@ -92,7 +92,7 @@ export default function AdminPage() {
       const data = await res.json()
 
       if (res.ok) {
-        setSuccess('Utilisateur cr avec succs')
+        setSuccess('Utilisateur créé avec succès')
         setFormData({
           username: '',
           password: '',
@@ -101,19 +101,19 @@ export default function AdminPage() {
           // Super Admin crée des Admins, Admin crée des Viewers
           role: isSuperAdmin() ? UserRole.ADMIN : UserRole.VIEWER,
         })
-        setShowCréeateForm(false)
+        setShowCreateForm(false)
         fetchUsers()
       } else {
-        setError(data.error || "Erreur lors de la cration de l'utilisateur")
+        setError(data.error || "Erreur lors de la création de l'utilisateur")
       }
     } catch (error) {
       console.error('Erreur:', error)
-      setError("Erreur lors de la cration de l'utilisateur")
+      setError("Erreur lors de la création de l'utilisateur")
     }
   }
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('tes-vous sr de vouloir supprimer cet utilisateur ?')) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
       return
     }
 
@@ -129,7 +129,7 @@ export default function AdminPage() {
       })
 
       if (res.ok) {
-        setSuccess('Utilisateur supprim avec succs')
+        setSuccess('Utilisateur supprimé avec succès')
         fetchUsers()
       } else {
         const data = await res.json()
@@ -186,11 +186,11 @@ export default function AdminPage() {
               Administration
             </h1>
             <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
-              Grez les utilisateurs de la plateforme
+              Gérez les utilisateurs de la plateforme
             </p>
           </div>
-          <Button variant="primary" onClick={() => setShowCréeateForm(!showCréeateForm)}>
-            {showCréeateForm ? 'Annuler' : 'Créer un utilisateur'}
+          <Button variant="primary" onClick={() => setShowCreateForm(!showCreateForm)}>
+            {showCreateForm ? 'Annuler' : 'Créer un utilisateur'}
           </Button>
         </div>
 
@@ -207,16 +207,16 @@ export default function AdminPage() {
           </Card>
         )}
 
-        {/* Formulaire de cration */}
-        {showCréeateForm && (
+        {/* Formulaire de création */}
+        {showCreateForm && (
           <Card className="mb-8">
             <h2 className="text-xl font-semibold mb-4" style={{ color: '#000000' }}>
               Créer un nouvel utilisateur
             </h2>
-            <form onSubmit={handleCréeateUser} className="space-y-4">
+            <form onSubmit={handleCreateUser} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
-                  label="Prnom"
+                  label="Prénom"
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -251,7 +251,7 @@ export default function AdminPage() {
                   className="block text-sm font-medium text-gray-700 mb-2"
                   style={{ color: '#374151' }}
                 >
-                  Rle
+                  Rôle
                 </label>
                 <select
                   value={formData.role}
@@ -269,7 +269,7 @@ export default function AdminPage() {
                 <Button type="submit" variant="primary">
                   Créer l&apos;utilisateur
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setShowCréeateForm(false)}>
+                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>
                   Annuler
                 </Button>
               </div>
@@ -298,10 +298,10 @@ export default function AdminPage() {
                       Nom d&apos;utilisateur
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Rle
+                      Rôle
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cr le
+                      Créé le
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
@@ -337,7 +337,7 @@ export default function AdminPage() {
                         className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                         style={{ color: '#6b7280' }}
                       >
-                        {new Date(u.créeatedAt).toLocaleDateString('fr-FR')}
+                        {new Date(u.createdAt).toLocaleDateString('fr-FR')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {u.id !== user.id && u.role !== UserRole.SUPER_ADMIN && (
