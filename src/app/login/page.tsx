@@ -32,7 +32,10 @@ export default function LoginPage() {
       {/* Conteneur principal avec largeur maximale pour écrans ultra-wide */}
       <div className="w-full max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row">
         {/* Partie gauche - Couleur unie professionnelle */}
-        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: '#4a9fbd' }}>
+        <div
+          className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+          style={{ backgroundColor: '#4a9fbd' }}
+        >
           <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 w-full">
             <div className="max-w-xl w-full">
               <h1 className="text-4xl xl:text-5xl font-bold mb-6 text-white drop-shadow-lg">
@@ -206,7 +209,7 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       autoComplete="current-password"
-                      placeholder=""
+                      placeholder="Votre mot de passe"
                       className="w-full px-4 py-3 pr-12 text-base bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                       style={{ color: '#000000', borderColor: '#e5e7eb' }}
                       onFocus={(e) => (e.currentTarget.style.borderColor = '#4a9fbd')}
@@ -296,9 +299,15 @@ export default function LoginPage() {
 
               {/* Footer */}
               <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Solution <span className="font-semibold" style={{ color: '#4a9fbd' }}>Var Habitat</span>{' '}
-                développée par <span className="font-semibold" style={{ color: '#7b68a6' }}>SolarPerform</span>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Solution{' '}
+                  <span className="font-semibold" style={{ color: '#4a9fbd' }}>
+                    Var Habitat
+                  </span>{' '}
+                  dveloppe par{' '}
+                  <span className="font-semibold" style={{ color: '#7b68a6' }}>
+                    SolarPerform
+                  </span>
                 </p>
               </div>
             </div>
