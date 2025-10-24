@@ -14,7 +14,7 @@ interface Connection {
   systemId?: string
   isActive: boolean
   lastSyncAt?: string
-  créeatedAt: string
+  createdAt: string
 }
 
 export default function ConnectionsPage() {
@@ -49,7 +49,7 @@ export default function ConnectionsPage() {
       !user.mustChangePassword
     ) {
       console.log('[SYNC] Admin sans connexion, redirection automatique vers Enphase...')
-      // Petit dlai pour viter une redirection trop abrupte
+      // Petit délai pour éviter une redirection trop abrupte
       const timer = setTimeout(() => {
         router.push('/connections/enphase/authorize')
       }, 1000)
@@ -129,23 +129,23 @@ export default function ConnectionsPage() {
       const data = await res.json()
 
       if (res.ok) {
-        console.log('[OK] Suppression russie:', data)
-        // Rafrachir la liste des connexions
+        console.log('[OK] Suppression réussie:', data)
+        // Rafraîchir la liste des connexions
         await fetchConnections()
         setDeleteModalOpen(false)
         setConnectionToDelete(null)
-        // Afficher un message de succs
+        // Afficher un message de succès
         alert(
-          `Service ${connectionToDelete.service.toUpperCase()} dconnect avec succs.\n\n` +
-            `${data.deletedRecords.total} enregistrements supprims au total.`
+          `Service ${connectionToDelete.service.toUpperCase()} déconnecté avec succès.\n\n` +
+            `${data.deletedRecords.total} enregistrements supprimés au total.`
         )
       } else {
         console.error('[ERREUR] Erreur lors de la suppression:', data)
         alert(`Erreur: ${data.error}`)
       }
     } catch (error) {
-      console.error('[ERREUR] Erreur lors de la dconnexion:', error)
-      alert('Erreur lors de la dconnexion du service')
+      console.error('[ERREUR] Erreur lors de la déconnexion:', error)
+      alert('Erreur lors de la déconnexion du service')
     }
   }
 
@@ -184,7 +184,7 @@ export default function ConnectionsPage() {
           </h1>
           <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
             Connectez votre système Enphase Energy pour suivre votre production solaire en temps
-            rel.
+            réel.
           </p>
         </div>
 
@@ -211,7 +211,7 @@ export default function ConnectionsPage() {
                         </h3>
                         {isConnected && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2">
-                            Connect
+                            Connecté
                           </span>
                         )}
                       </div>
@@ -246,7 +246,7 @@ export default function ConnectionsPage() {
                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
                             onClick={() => handleDisconnect(connection)}
                           >
-                            Dconnecter
+                            Déconnecter
                           </Button>
                         </div>
                       </div>
@@ -263,7 +263,7 @@ export default function ConnectionsPage() {
                           </Button>
                         ) : (
                           <Button variant="outline" size="sm" className="w-full" disabled>
-                            Bientt disponible
+                            Bientôt disponible
                           </Button>
                         )}
                       </div>
@@ -297,7 +297,7 @@ export default function ConnectionsPage() {
               <p className="mt-1 text-sm text-gray-500" style={{ color: '#6b7280' }}>
                 {user?.role === 'ADMIN'
                   ? 'Redirection vers la connexion Enphase...'
-                  : 'Connectez votre premier système solaire pour comêmencer.'}
+                  : 'Connectez votre premier système solaire pour commencer.'}
               </p>
               {user?.role === 'ADMIN' && (
                 <div className="mt-4">
@@ -320,10 +320,10 @@ export default function ConnectionsPage() {
           onConfirm={handleConfirmDelete}
           serviceName={connectionToDelete.service.toUpperCase()}
           confirmText={connectionToDelete.service}
-          title="Dconnecter le service"
-          description={`Vous tes sur le point de supprimer votre connexion ${connectionToDelete.service.toUpperCase()}. Cette action est irrversible.`}
-          warningMessage={`Toutes les données collectes depuis le ${new Date(
-            connectionToDelete.créeatedAt
+          title="Déconnecter le service"
+          description={`Vous êtes sur le point de supprimer votre connexion ${connectionToDelete.service.toUpperCase()}. Cette action est irréversible.`}
+          warningMessage={`Toutes les données collectées depuis le ${new Date(
+            connectionToDelete.createdAt
           ).toLocaleDateString(
             'fr-FR'
           )} seront définitivement supprimées de la base de données. Cette action ne peut pas être annulée.`}
