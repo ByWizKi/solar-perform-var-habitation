@@ -19,7 +19,7 @@ export default function LoginPage() {
 
     try {
       await login(username, password)
-      // La redirection est gre par AuthContext
+      // La redirection est gérée par AuthContext
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue')
     } finally {
@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      {/* Conteneur principal avec largeur maximale pour crans ultra-wide */}
+      {/* Conteneur principal avec largeur maximale pour écrans ultra-wide */}
       <div className="w-full max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row">
         {/* Partie gauche - Couleur unie professionnelle */}
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: '#4a9fbd' }}>
@@ -61,7 +61,7 @@ export default function LoginPage() {
                       Supervision en temps réel
                     </h3>
                     <p className="text-white text-base leading-relaxed drop-shadow-sm">
-                      Suivez votre production solaire minute par minute depuis n&apos;importe o
+                      Suivez votre production solaire minute par minute depuis n&apos;importe où
                     </p>
                   </div>
                 </div>
@@ -79,10 +79,10 @@ export default function LoginPage() {
                   </svg>
                   <div>
                     <h3 className="font-bold text-xl mb-1 text-white drop-shadow-md">
-                      Gestion hirarchique
+                      Gestion hiérarchique
                     </h3>
                     <p className="text-white text-base leading-relaxed drop-shadow-sm">
-                      Administrateurs, superviseurs et observateurs - chacun son rle
+                      Administrateurs, superviseurs et observateurs - chacun son rôle
                     </p>
                   </div>
                 </div>
@@ -100,23 +100,23 @@ export default function LoginPage() {
                   </svg>
                   <div>
                     <h3 className="font-bold text-xl mb-1 text-white drop-shadow-md">
-                      Données compltes
+                      Données complètes
                     </h3>
                     <p className="text-white text-base leading-relaxed drop-shadow-sm">
-                      Historique 14 jours, statistiques dtailles et analyses de performance
+                      Historique 14 jours, statistiques détaillées et analyses de performance
                     </p>
                   </div>
                 </div>
               </div>
               <div className="mt-8 pt-8 border-t border-white/30">
                 <p className="text-sm text-white text-center leading-relaxed drop-shadow-sm font-medium">
-                  Plateforme dveloppe et pilote par{' '}
+                  Plateforme développée et pilotée par{' '}
                   <span className="font-bold text-white">SolarPerform</span>
                 </p>
               </div>
             </div>
           </div>
-          {/* Pattern dcoratif */}
+          {/* Pattern décoratif */}
           <div className="absolute bottom-0 right-0 opacity-10">
             <svg width="400" height="400" viewBox="0 0 400 400">
               <circle cx="200" cy="200" r="150" fill="white" opacity="0.1" />
@@ -144,7 +144,7 @@ export default function LoginPage() {
                 <VarHabitatLogo className="h-32 w-80" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900">Connexion</h2>
-              <p className="mt-2 text-gray-600">Accdez  votre espace de monitoring</p>
+              <p className="mt-2 text-gray-600">Accédez à votre espace de monitoring</p>
             </div>
 
             {/* Carte de connexion */}
@@ -298,7 +298,7 @@ export default function LoginPage() {
               <div className="mt-6 text-center">
               <p className="text-sm text-gray-600 leading-relaxed">
                 Solution <span className="font-semibold" style={{ color: '#4a9fbd' }}>Var Habitat</span>{' '}
-                dveloppe par <span className="font-semibold" style={{ color: '#7b68a6' }}>SolarPerform</span>
+                développée par <span className="font-semibold" style={{ color: '#7b68a6' }}>SolarPerform</span>
                 </p>
               </div>
             </div>
