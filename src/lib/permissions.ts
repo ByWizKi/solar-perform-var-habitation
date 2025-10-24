@@ -1,20 +1,20 @@
 import { UserRole } from '@/types'
 
 /**
- * Vrifie si un utilisateur a les permissions pour crer un utilisateur d'un certain rle
+ * Vrifie si un utilisateur a les permissions pour créer un utilisateur d'un certain rle
  */
-export function canCreateUser(creatorRole: UserRole, targetRole: UserRole): boolean {
-  if (creatorRole === UserRole.SUPER_ADMIN) {
-    // Super admin peut seulement crer des Admins (les Viewers sont rattachs aux Admins)
+export function canCreateUser(créeatorRole: UserRole, targetRole: UserRole): boolean {
+  if (créeatorRole === UserRole.SUPER_ADMIN) {
+    // Super admin peut seulement créer des Admins (les Viewers sont rattachs aux Admins)
     return targetRole === UserRole.ADMIN
   }
 
-  if (creatorRole === UserRole.ADMIN) {
-    // Admin peut seulement crer des Viewers
+  if (créeatorRole === UserRole.ADMIN) {
+    // Admin peut seulement créer des Viewers
     return targetRole === UserRole.VIEWER
   }
 
-  // Viewer ne peut crer personne
+  // Viewer ne peut créer personne
   return false
 }
 
@@ -32,7 +32,7 @@ export function canDeleteUser(
   }
 
   if (deleterRole === UserRole.ADMIN) {
-    // Admin peut seulement supprimer les viewers qu'il a crs
+    // Admin peut seulement supprimer les viewers qu'il a créés
     return targetRole === UserRole.VIEWER && isCreator
   }
 
@@ -40,14 +40,14 @@ export function canDeleteUser(
 }
 
 /**
- * Vrifie si un utilisateur peut voir les donnes
+ * Vrifie si un utilisateur peut voir les données
  */
 export function canViewDashboard(role: UserRole): boolean {
   return true // Tous les rles peuvent voir le dashboard
 }
 
 /**
- * Vrifie si un utilisateur peut actualiser les donnes Enphase
+ * Vrifie si un utilisateur peut actualiser les données Enphase
  */
 export function canRefreshData(role: UserRole): boolean {
   return role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN

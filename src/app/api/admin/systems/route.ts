@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { UserRole } from '@/types'
 
 /**
- * GET /api/admin/systems - Rcuprer tous les systmes Enphase (Super Admin uniquement)
+ * GET /api/admin/systems - Rcuprer tous les systèmes Enphase (Super Admin uniquement)
  */
 export async function GET(request: NextRequest) {
   try {
@@ -26,10 +26,10 @@ export async function GET(request: NextRequest) {
     })
 
     if (!currentUser || currentUser.role !== UserRole.SUPER_ADMIN) {
-      return NextResponse.json({ error: 'Accs rserv aux Super Admins' }, { status: 403 })
+      return NextResponse.json({ error: 'Accs réservé aux Super Admins' }, { status: 403 })
     }
 
-    // Rcuprer tous les systmes avec leurs donnes en UNE SEULE requête (optimisation N+1)
+    // Rcuprer tous les systèmes avec leurs données en UNE SEULE requête (optimisation N+1)
     const connections = await prisma.enphaseConnection.findMany({
       where: {
         isActive: true,
@@ -104,9 +104,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ systems })
   } catch (error: any) {
-    console.error('Erreur lors de la rcupration des systmes:', error)
+    console.error('Erreur lors de la récupération des systèmes:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la rcupration des systmes' },
+      { error: 'Erreur lors de la récupération des systèmes' },
       { status: 500 }
     )
   }

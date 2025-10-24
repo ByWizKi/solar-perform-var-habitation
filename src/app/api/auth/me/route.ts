@@ -29,7 +29,7 @@ async function handler(req: AuthRequest) {
 
     return NextResponse.json({ user })
   } catch (error) {
-    console.error('Erreur lors de la rcupration du profil:', error)
+    console.error('Erreur lors de la récupération du profil:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

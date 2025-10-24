@@ -27,7 +27,7 @@ async function handler(req: AuthRequest) {
     // Vrifier que l'utilisateur est admin (pas VIEWER)
     if (user.role === 'VIEWER') {
       return NextResponse.json(
-        { error: 'Seuls les administrateurs peuvent actualiser les donnes' },
+        { error: 'Seuls les administrateurs peuvent actualiser les données' },
         { status: 403 }
       )
     }
@@ -83,12 +83,12 @@ async function handler(req: AuthRequest) {
     const enphaseService = getEnphaseService()
     const accessToken = await enphaseService.ensureValidToken(userId)
 
-    // Rcuprer les dernires donnes depuis l'API Enphase
+    // Rcuprer les dernières données depuis l'API Enphase
     const dataCollector = getEnphaseDataCollector()
 
     console.log(`[SYNC] [API] Rcupration du summary Enphase...`)
 
-    // Rcuprer le rsum du systme (contient energyToday, powerNow, etc.)
+    // Rcuprer le rsum du système (contient energyToday, powerNow, etc.)
     await dataCollector.fetchAndStoreSystemSummary(connection.id, systemId, accessToken)
 
     // Compter les appels API aprs le refresh
@@ -103,7 +103,7 @@ async function handler(req: AuthRequest) {
     console.log(`[UP] Total appels API: ${apiCallsAfter}/1000`)
     console.log('='.repeat(80) + '\n')
 
-    // Rcuprer les donnes mises  jour
+    // Rcuprer les données mises à jour
     const latestData = await prisma.productionData.findFirst({
       where: {
         connectionId: connection.id,

@@ -7,7 +7,7 @@ const ENPHASE_TOKEN_URL = `${ENPHASE_API_BASE}/oauth/token`
 
 export interface EnphaseConfig {
   clientId: string
-  clientSecret: string
+  clientSecréet: string
   apiKey: string
   redirectUri: string
 }
@@ -40,7 +40,7 @@ export class EnphaseService {
     refreshToken: string
     expiresIn: number
   }> {
-    const basicAuth = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString(
+    const basicAuth = Buffer.from(`${this.config.clientId}:${this.config.clientSecréet}`).toString(
       'base64'
     )
 
@@ -78,7 +78,7 @@ export class EnphaseService {
     refreshToken: string
     expiresIn: number
   }> {
-    const basicAuth = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString(
+    const basicAuth = Buffer.from(`${this.config.clientId}:${this.config.clientSecréet}`).toString(
       'base64'
     )
 
@@ -109,7 +109,7 @@ export class EnphaseService {
     }
   }
 
-  // Rcuprer les systmes de l'utilisateur (avec pagination)
+  // Rcuprer les systèmes de l'utilisateur (avec pagination)
   async getSystems(accessToken: string, page: number = 1, pageSize: number = 10): Promise<any> {
     const params = new URLSearchParams({
       key: this.config.apiKey,
@@ -125,13 +125,13 @@ export class EnphaseService {
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`Erreur lors de la rcupration des systmes: ${error}`)
+      throw new Error(`Erreur lors de la récupération des systèmes: ${error}`)
     }
 
     return response.json()
   }
 
-  // Rcuprer les informations gnrales d'un systme
+  // Rcuprer les informations gnrales d'un système
   async getSystemInfo(systemId: string, accessToken: string): Promise<any> {
     const response = await fetch(
       `${ENPHASE_API_BASE}/api/v4/systems/${systemId}?key=${this.config.apiKey}`,
@@ -144,13 +144,13 @@ export class EnphaseService {
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`Erreur lors de la rcupration des infos systme: ${error}`)
+      throw new Error(`Erreur lors de la récupération des infos système: ${error}`)
     }
 
     return response.json()
   }
 
-  // Rcuprer les dtails d'un systme (summary)
+  // Rcuprer les détails d'un système (summary)
   async getSystemDetails(systemId: string, accessToken: string): Promise<any> {
     const response = await fetch(
       `${ENPHASE_API_BASE}/api/v4/systems/${systemId}/summary?key=${this.config.apiKey}`,
@@ -162,13 +162,13 @@ export class EnphaseService {
     )
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la rcupration des dtails du systme')
+      throw new Error('Erreur lors de la récupération des détails du système')
     }
 
     return response.json()
   }
 
-  // Rcuprer les donnes de production (energy_lifetime)
+  // Rcuprer les données de production (energy_lifetime)
   async getProductionData(
     systemId: string,
     accessToken: string,
@@ -196,13 +196,13 @@ export class EnphaseService {
     )
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la rcupration des donnes de production')
+      throw new Error('Erreur lors de la récupération des données de production')
     }
 
     return response.json()
   }
 
-  // Rcuprer tous les appareils du systme (micro-inverseurs, batteries, etc.)
+  // Rcuprer tous les appareils du système (micro-inverseurs, batteries, etc.)
   async getSystemDevices(systemId: string, accessToken: string): Promise<any> {
     const response = await fetch(
       `${ENPHASE_API_BASE}/api/v4/systems/${systemId}/devices?key=${this.config.apiKey}`,
@@ -215,7 +215,7 @@ export class EnphaseService {
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`Erreur lors de la rcupration des appareils: ${error}`)
+      throw new Error(`Erreur lors de la récupération des appareils: ${error}`)
     }
 
     return response.json()
@@ -250,13 +250,13 @@ export class EnphaseService {
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`Erreur lors de la rcupration des stats RGM: ${error}`)
+      throw new Error(`Erreur lors de la récupération des stats RGM: ${error}`)
     }
 
     return response.json()
   }
 
-  // Sauvegarder ou mettre  jour la connexion en base de donnes
+  // Sauvegarder ou mettre  jour la connexion en base de données
   async saveConnection(
     userId: string,
     accessToken: string,
@@ -267,7 +267,7 @@ export class EnphaseService {
   ) {
     const expiresAt = new Date(Date.now() + expiresIn * 1000)
 
-    // Extraire les informations systme des mtadonnes
+    // Extraire les informations système des mtadonnées
     const systemName = additionalMetadata?.name || additionalMetadata?.public_name
     const systemSize = additionalMetadata?.system_size
     const timezone = additionalMetadata?.timezone
@@ -341,7 +341,7 @@ export class EnphaseService {
 export function getEnphaseService(): EnphaseService {
   const config: EnphaseConfig = {
     clientId: process.env.ENPHASE_CLIENT_ID || '',
-    clientSecret: process.env.ENPHASE_CLIENT_SECRET || '',
+    clientSecréet: process.env.ENPHASE_CLIENT_SECRET || '',
     apiKey: process.env.ENPHASE_API_KEY || '',
     redirectUri: `${
       process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'

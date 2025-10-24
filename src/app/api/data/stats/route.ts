@@ -14,7 +14,7 @@ async function handler(req: AuthRequest) {
       return NextResponse.json({ error: 'systemId requis' }, { status: 400 })
     }
 
-    // Vrifier que l'utilisateur a accs  ce systme
+    // Vrifier que l'utilisateur a accs  ce système
     let connection = await prisma.enphaseConnection.findFirst({
       where: {
         userId,
@@ -27,7 +27,7 @@ async function handler(req: AuthRequest) {
       },
     })
 
-    // Si l'utilisateur n'a pas de connexion directe, vrifier s'il est viewer
+    // Si l'utilisateur n'a pas de connexion directe, vérifier s'il est viewer
     if (!connection) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
@@ -35,7 +35,7 @@ async function handler(req: AuthRequest) {
       })
 
       if (user?.role === 'VIEWER' && user.createdById) {
-        // Le viewer peut accder aux donnes de son crateur (admin)
+        // Le viewer peut accder aux données de son crateur (admin)
         connection = await prisma.enphaseConnection.findFirst({
           where: {
             userId: user.createdById,
@@ -91,7 +91,7 @@ async function handler(req: AuthRequest) {
       },
     })
 
-    // Si pas de donnes du dbut du mois, les rcuprer depuis Enphase
+    // Si pas de données du dbut du mois, les rcuprer depuis Enphase
     if (!firstSummaryOfMonth) {
       try {
         console.log('\n' + '='.repeat(80))
@@ -101,7 +101,7 @@ async function handler(req: AuthRequest) {
         const enphaseService = getEnphaseService()
         const accessToken = await enphaseService.ensureValidToken(userId)
 
-        // Rcuprer les donnes du mois
+        // Rcuprer les données du mois
         const endOfMonth = new Date()
         const lifetimeData = await enphaseService.getProductionData(
           systemId,
@@ -118,7 +118,7 @@ async function handler(req: AuthRequest) {
           const apiStartDate = new Date(lifetimeData.start_date)
 
           console.log(
-            `[CACHE] ${productionArray.length} jours de donnes depuis ${
+            `[CACHE] ${productionArray.length} jours de données depuis ${
               apiStartDate.toISOString().split('T')[0]
             }`
           )
@@ -181,18 +181,18 @@ async function handler(req: AuthRequest) {
     const lifetimeStartMonth = (firstSummaryOfMonth?.metadata as any)?.energyLifetime || lifetimeNow
     const productionThisMonth = Math.max(0, lifetimeNow - lifetimeStartMonth)
 
-    // Si pas de donnes, afficher un message informatif
+    // Si pas de données, afficher un message informatif
     if (!latestSummary) {
       console.log('\n' + '='.repeat(80))
-      console.log(`[ATTENTION] [STATS] Aucune donne disponible pour le systme ${systemId}`)
+      console.log(`[ATTENTION] [STATS] Aucune donne disponible pour le système ${systemId}`)
       console.log('='.repeat(80))
       console.log(
-        ` Cliquez sur "Actualiser" dans le dashboard pour rcuprer les donnes depuis Enphase`
+        ` Cliquez sur "Actualiser" dans le dashboard pour rcuprer les données depuis Enphase`
       )
       console.log('='.repeat(80) + '\n')
     } else {
       // Log des statistiques calcules
-      console.log('[DATA] [STATS] Rsum calcul:')
+      console.log('[DATA] [STATS] Résumé calcul:')
       console.log(`  [TODAY] Aujourd'hui: ${((latestSummary?.energy || 0) / 1000).toFixed(2)} kWh`)
       console.log(`  [STATS] Ce mois: ${(productionThisMonth / 1000).toFixed(2)} kWh`)
       console.log(`  [LIFETIME] Lifetime total: ${(lifetimeNow / 1000).toFixed(2)} kWh`)
@@ -225,7 +225,7 @@ async function handler(req: AuthRequest) {
       lastUpdate: latestSummary?.timestamp || null,
     })
   } catch (error) {
-    console.error('Erreur lors de la rcupration des stats:', error)
+    console.error('Erreur lors de la récupération des stats:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

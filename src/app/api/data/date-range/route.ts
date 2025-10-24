@@ -79,13 +79,13 @@ async function handler(req: AuthRequest) {
 
     let totalApiCalls = 0
 
-    // Pour chaque mois, vrifier si on a les donnes en BDD
+    // Pour chaque mois, vérifier si on a les données en BDD
     for (const month of months) {
       const [year, monthNum] = month.split('-').map(Number)
       const monthStart = new Date(year, monthNum - 1, 1)
       const monthEnd = new Date(year, monthNum, 0, 23, 59, 59, 999)
 
-      // Vrifier si on a des donnes pour ce mois
+      // Vrifier si on a des données pour ce mois
       const existingData = await prisma.productionData.count({
         where: {
           connectionId: connection.id,
@@ -98,7 +98,7 @@ async function handler(req: AuthRequest) {
         },
       })
 
-      // Si on force le refresh OU qu'il n'y a pas de donnes, on fait l'appel API
+      // Si on force le refresh OU qu'il n'y a pas de données, on fait l'appel API
       if (refresh || existingData === 0) {
         console.log(
           `[API] API CALL pour ${month}: ${refresh ? 'refresh forc' : 'aucune donne en BDD'}`
@@ -154,7 +154,7 @@ async function handler(req: AuthRequest) {
                     connectionType: 'enphase',
                     systemId,
                     source: 'energy_lifetime',
-                    power: 0, // Pas de donnes de puissance pour les agrgats journaliers
+                    power: 0, // Pas de données de puissance pour les agrgats journaliers
                     energy: energyWh,
                     timestamp: new Date(currentDate.getTime() + i * 86400 * 1000),
                     interval: 86400,
@@ -212,7 +212,7 @@ async function handler(req: AuthRequest) {
                     connectionType: 'enphase',
                     systemId,
                     source: 'consumption_lifetime',
-                    power: 0, // Pas de donnes de puissance pour les agrgats journaliers
+                    power: 0, // Pas de données de puissance pour les agrgats journaliers
                     energy: energyWh,
                     timestamp: new Date(currentDate.getTime() + i * 86400 * 1000),
                     interval: 86400,
@@ -239,7 +239,7 @@ async function handler(req: AuthRequest) {
       }
     }
 
-    // Maintenant rcuprer toutes les donnes de la plage depuis la BDD
+    // Maintenant rcuprer toutes les données de la plage depuis la BDD
     const productionData = await prisma.productionData.findMany({
       where: {
         connectionId: connection.id,
@@ -266,7 +266,7 @@ async function handler(req: AuthRequest) {
       orderBy: { timestamp: 'asc' },
     })
 
-    // Agrger les donnes par jour
+    // Agrger les données par jour
     const dailyProduction: { [key: string]: number } = {}
     const dailyConsumption: { [key: string]: number } = {}
 
@@ -314,7 +314,7 @@ async function handler(req: AuthRequest) {
       apiLimit: 1000,
     })
   } catch (error) {
-    console.error('Erreur lors de la rcupration des donnes par plage:', error)
+    console.error('Erreur lors de la récupération des données par plage:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

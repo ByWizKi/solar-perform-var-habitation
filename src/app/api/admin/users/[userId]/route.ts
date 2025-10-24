@@ -64,7 +64,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { userI
   }
 }
 
-// GET /api/admin/users/[userId] - Rcuprer les dtails d'un utilisateur
+// GET /api/admin/users/[userId] - Rcuprer les détails d'un utilisateur
 export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -116,9 +116,9 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
 
     return NextResponse.json({ user })
   } catch (error: any) {
-    console.error("Erreur lors de la rcupration de l'utilisateur:", error)
+    console.error("Erreur lors de la récupération de l'utilisateur:", error)
     return NextResponse.json(
-      { error: "Erreur lors de la rcupration de l'utilisateur" },
+      { error: "Erreur lors de la récupération de l'utilisateur" },
       { status: 500 }
     )
   }

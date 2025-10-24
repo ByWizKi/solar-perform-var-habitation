@@ -23,8 +23,8 @@ export async function GET(req: NextRequest) {
     // changer le code contre des tokens
     const tokens = await enphaseService.exchangeCodeForTokens(code)
 
-    // Rcuprer TOUS les systmes de l'utilisateur (avec pagination si ncessaire)
-    console.log('[SEARCH] Rcupration de la liste des systmes Enphase...')
+    // Rcuprer TOUS les systèmes de l'utilisateur (avec pagination si ncessaire)
+    console.log('[SEARCH] Rcupration de la liste des systèmes Enphase...')
     const allSystems = []
     let currentPage = 1
     let hasMorePages = true
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       if (systemsData.systems && systemsData.systems.length > 0) {
         allSystems.push(...systemsData.systems)
         console.log(
-          `[PAGE] Page ${currentPage}: ${systemsData.systems.length} systmes rcuprs (total: ${allSystems.length}/${systemsData.total})`
+          `[PAGE] Page ${currentPage}: ${systemsData.systems.length} systèmes rcuprs (total: ${allSystems.length}/${systemsData.total})`
         )
 
         // Vrifier s'il y a d'autres pages
@@ -46,20 +46,20 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    console.log(`[OK] Total: ${allSystems.length} systme(s) trouv(s)`)
+    console.log(`[OK] Total: ${allSystems.length} système(s) trouv(s)`)
 
     if (allSystems.length === 0) {
-      console.error('[ERREUR] Aucun systme Enphase trouv pour cet utilisateur')
+      console.error('[ERREUR] Aucun système Enphase trouv pour cet utilisateur')
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_APP_URL}/connections?error=no_systems`
       )
     }
 
-    // Prendre le premier systme (ou permettre  l'utilisateur de choisir plus tard)
+    // Prendre le premier système (ou permettre  l'utilisateur de choisir plus tard)
     const primarySystem = allSystems[0]
     const systemId = primarySystem.system_id?.toString()
 
-    // Stocker les informations dtailles du systme dans metadata
+    // Stocker les informations dtailles du système dans metadata
     const systemMetadata = {
       name: primarySystem.name,
       public_name: primarySystem.public_name,
@@ -75,13 +75,13 @@ export async function GET(req: NextRequest) {
       all_system_ids: allSystems.map((s) => s.system_id),
     }
 
-    console.log('[SAVE] Sauvegarde de la connexion avec mtadonnes:', {
+    console.log('[SAVE] Sauvegarde de la connexion avec mtadonnées:', {
       systemId,
       systemName: primarySystem.name,
       systemsCount: allSystems.length,
     })
 
-    // Sauvegarder la connexion avec les mtadonnes
+    // Sauvegarder la connexion avec les mtadonnées
     const connection = await enphaseService.saveConnection(
       state, // userId
       tokens.accessToken,

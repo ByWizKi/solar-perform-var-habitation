@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyPassword, createAuthTokens } from '@/lib/auth'
+import { verifyPassword, créeateAuthTokens } from '@/lib/auth'
 import { loginSchema } from '@/lib/validators'
 import {
   checkRateLimit,
-  incrementRateLimit,
+  incréementRateLimit,
   resetRateLimit,
   getRemainingTime,
 } from '@/lib/rate-limit'
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    // Validation des donnes
+    // Validation des données
     const validatedData = loginSchema.parse(body)
 
     // Récupérer l'IP du client
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       // Incrémenter le compteur de tentatives échouées
-      incrementRateLimit(rateLimitKey, 'LOGIN')
+      incréementRateLimit(rateLimitKey, 'LOGIN')
 
       return NextResponse.json(
         { error: "Nom d'utilisateur ou mot de passe incorrect", errorType: 'INVALID_CREDENTIALS' },
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     if (!isPasswordValid) {
       // Incrémenter le compteur de tentatives échouées
-      incrementRateLimit(rateLimitKey, 'LOGIN')
+      incréementRateLimit(rateLimitKey, 'LOGIN')
 
       return NextResponse.json(
         { error: "Nom d'utilisateur ou mot de passe incorrect", errorType: 'INVALID_CREDENTIALS' },
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     resetRateLimit(rateLimitKey, 'LOGIN')
 
     // Gnrer les tokens
-    const tokens = await createAuthTokens(user)
+    const tokens = await créeateAuthTokens(user)
 
     return NextResponse.json({
       message: 'Connexion russie',
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     console.error('Erreur lors de la connexion:', error)
     return NextResponse.json(
       {
-        error: 'Erreur systme : impossible de se connecter. Veuillez ressayer.',
+        error: 'Erreur système : impossible de se connecter. Veuillez ressayer.',
         errorType: 'SYSTEM_ERROR',
       },
       { status: 500 }

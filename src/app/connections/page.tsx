@@ -151,7 +151,7 @@ export default function ConnectionsPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-scréeen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
@@ -163,7 +163,7 @@ export default function ConnectionsPage() {
       id: 'enphase',
       name: 'Enphase Energy',
       description:
-        'Connectez vos micro-onduleurs Enphase pour suivre la production solaire en temps rel',
+        'Connectez vos micro-onduleurs Enphase pour suivre la production solaire en temps réel',
       logo: '/logos/enphase.svg',
       available: true,
     },
@@ -174,7 +174,7 @@ export default function ConnectionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-scréeen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -183,7 +183,7 @@ export default function ConnectionsPage() {
             Connexion Enphase
           </h1>
           <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
-            Connectez votre systme Enphase Energy pour suivre votre production solaire en temps
+            Connectez votre système Enphase Energy pour suivre votre production solaire en temps
             rel.
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function ConnectionsPage() {
                         )}
                         {connection.lastSyncAt && (
                           <p className="text-xs text-gray-500">
-                            Dernire sync:{' '}
+                            Dernière sync:{' '}
                             {new Date(connection.lastSyncAt).toLocaleDateString('fr-FR')}
                           </p>
                         )}
@@ -297,7 +297,7 @@ export default function ConnectionsPage() {
               <p className="mt-1 text-sm text-gray-500" style={{ color: '#6b7280' }}>
                 {user?.role === 'ADMIN'
                   ? 'Redirection vers la connexion Enphase...'
-                  : 'Connectez votre premier systme solaire pour commencer.'}
+                  : 'Connectez votre premier système solaire pour commencer.'}
               </p>
               {user?.role === 'ADMIN' && (
                 <div className="mt-4">
@@ -322,11 +322,11 @@ export default function ConnectionsPage() {
           confirmText={connectionToDelete.service}
           title="Dconnecter le service"
           description={`Vous tes sur le point de supprimer votre connexion ${connectionToDelete.service.toUpperCase()}. Cette action est irrversible.`}
-          warningMessage={`Toutes les donnes collectes depuis le ${new Date(
+          warningMessage={`Toutes les données collectes depuis le ${new Date(
             connectionToDelete.createdAt
           ).toLocaleDateString(
             'fr-FR'
-          )} seront dfinitivement supprimes de la base de donnes. Cette action ne peut pas tre annule.`}
+          )} seront définitivement supprimées de la base de données. Cette action ne peut pas être annulée.`}
         />
       )}
     </div>

@@ -96,7 +96,7 @@ export default function ConfirmDeleteModal({
                   <h3 className="text-sm font-semibold text-red-800">Attention !</h3>
                   <p className="text-sm text-red-700 mt-1">
                     {warningMessage ||
-                      'Cette action est irrversible. Toutes les donnes associes seront dfinitivement supprimes.'}
+                      'Cette action est irrversible. Toutes les données associes seront définitivement supprimées.'}
                   </p>
                 </div>
               </div>
@@ -109,12 +109,12 @@ export default function ConfirmDeleteModal({
               </h4>
               <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
                 <li>Connexion au service {serviceName}</li>
-                <li>Tous les snapshots systme</li>
-                <li>Toutes les donnes de production</li>
-                <li>Toutes les donnes de consommation</li>
-                <li>Toutes les donnes de batterie</li>
+                <li>Tous les snapshots système</li>
+                <li>Toutes les données de production</li>
+                <li>Toutes les données de consommation</li>
+                <li>Toutes les données de batterie</li>
                 <li>Tous les appareils et quipements</li>
-                <li>Tous les vnements systme</li>
+                <li>Tous les vnements système</li>
                 <li>Tous les logs d&apos;appels API</li>
               </ul>
             </div>
@@ -145,7 +145,7 @@ export default function ConfirmDeleteModal({
                 onClick={handleConfirm}
                 disabled={isConfirmDisabled}
               >
-                {isDeleting ? 'Suppression...' : 'Supprimer dfinitivement'}
+                {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
               </Button>
             </div>
           </div>

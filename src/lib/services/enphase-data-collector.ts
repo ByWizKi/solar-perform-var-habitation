@@ -142,7 +142,7 @@ export class EnphaseDataCollector {
       systemId
     )
 
-    // Stocker les donnes de production actuelles
+    // Stocker les données de production actuelles
     await prisma.productionData.create({
       data: {
         connectionId,
@@ -161,7 +161,7 @@ export class EnphaseDataCollector {
       },
     })
 
-    // Mettre  jour les infos systme dans la connexion et lastSyncAt
+    // Mettre  jour les infos système dans la connexion et lastSyncAt
     await prisma.enphaseConnection.update({
       where: { id: connectionId },
       data: {
@@ -273,7 +273,7 @@ export class EnphaseDataCollector {
       accessToken
     )
 
-    // Mettre  jour le snapshot avec les donnes lifetime dans metadata
+    // Mettre  jour le snapshot avec les données lifetime dans metadata
     if (data.energy_lifetime) {
       const existingSnapshot = await prisma.productionData.findFirst({
         where: { connectionId, systemId, interval: 0, source: 'summary' },
@@ -614,7 +614,7 @@ export class EnphaseDataCollector {
   // ========== SYNCHRONISATION ==========
 
   /**
-   * SYNC INCRMENTALE - Rcupre uniquement les nouvelles donnes
+   * SYNC INCRMENTALE - Rcupre uniquement les nouvelles données
    * Cot: 3-5 API calls | Quota: 1000/mois = 6-8x/jour max
    */
   async syncAllData(
@@ -622,7 +622,7 @@ export class EnphaseDataCollector {
     systemId: string,
     accessToken: string
   ): Promise<{ apiCalls: number }> {
-    console.log(`[SYNC] SYNC pour le systme ${systemId}`)
+    console.log(`[SYNC] SYNC pour le système ${systemId}`)
     let apiCalls = 0
 
     try {
@@ -633,7 +633,7 @@ export class EnphaseDataCollector {
       apiCalls++
       console.log('[OK] Current data')
 
-      // 2. Dernire sync
+      // 2. Dernière sync
       const connection = await prisma.enphaseConnection.findUnique({
         where: { id: connectionId },
       })
@@ -693,7 +693,7 @@ export class EnphaseDataCollector {
     let apiCalls = 0
 
     try {
-      // 1. Info systme
+      // 1. Info système
       await this.fetchAndStoreSystemSummary(connectionId, systemId, accessToken)
       apiCalls++
       await this.fetchAndStoreLatestTelemetry(connectionId, systemId, accessToken)
@@ -711,7 +711,7 @@ export class EnphaseDataCollector {
         if (!error.message.includes('422') && !error.message.includes('consumption meter')) {
           throw error
         }
-        // Sinon, on ignore (systme sans compteur de consommation)
+        // Sinon, on ignore (système sans compteur de consommation)
       }
 
       // 3. Import/Export

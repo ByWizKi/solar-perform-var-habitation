@@ -45,14 +45,14 @@ function validateEnv() {
     )
   }
 
-  // Validation de la longueur minimale des secrets JWT (sécurité)
+  // Validation de la longueur minimale des secréets JWT (sécurité)
   const MIN_SECRET_LENGTH = 32
 
   if (process.env.JWT_SECRET!.length < MIN_SECRET_LENGTH) {
     throw new Error(
       `ERREUR DE SECURITE: JWT_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
         `Longueur actuelle: ${process.env.JWT_SECRET!.length} caractères\n` +
-        `Générez un secret fort avec: openssl rand -base64 32`
+        `Générez un secréet fort avec: openssl rand -base64 32`
     )
   }
 
@@ -60,15 +60,15 @@ function validateEnv() {
     throw new Error(
       `ERREUR DE SECURITE: JWT_REFRESH_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
         `Longueur actuelle: ${process.env.JWT_REFRESH_SECRET!.length} caractères\n` +
-        `Générez un secret fort avec: openssl rand -base64 32`
+        `Générez un secréet fort avec: openssl rand -base64 32`
     )
   }
 
-  // Avertissement si les secrets sont identiques
+  // Avertissement si les secréets sont identiques
   if (process.env.JWT_SECRET === process.env.JWT_REFRESH_SECRET) {
     console.warn(
       `AVERTISSEMENT DE SECURITE: JWT_SECRET et JWT_REFRESH_SECRET sont identiques\n` +
-        `Il est recommandé d'utiliser des secrets différents pour chaque type de token`
+        `Il est recommandé d'utiliser des secréets différents pour chaque type de token`
     )
   }
 

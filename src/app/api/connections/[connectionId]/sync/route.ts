@@ -24,7 +24,7 @@ async function handler(req: AuthRequest, { params }: { params: { connectionId: s
     }
 
     if (!connection.systemId) {
-      return NextResponse.json({ error: 'Aucun systme associ' }, { status: 400 })
+      return NextResponse.json({ error: 'Aucun système associ' }, { status: 400 })
     }
 
     // Vrifier et rafrachir le token si ncessaire

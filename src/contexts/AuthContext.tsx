@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await logout()
       }
     } catch (error) {
-      console.error('Erreur lors de la rcupration du profil:', error)
+      console.error('Erreur lors de la récupération du profil:', error)
       await logout()
     } finally {
       setIsLoading(false)

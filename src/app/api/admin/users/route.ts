@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Super admin peut voir tous les utilisateurs
-    // Admin peut voir seulement les utilisateurs qu'il a crs
+    // Admin peut voir seulement les utilisateurs qu'il a créés
     const where = currentUser.role === UserRole.SUPER_ADMIN ? {} : { createdById: currentUser.id }
 
     const users = await prisma.user.findMany({
@@ -50,9 +50,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ users })
   } catch (error: any) {
-    console.error('Erreur lors de la rcupration des utilisateurs:', error)
+    console.error('Erreur lors de la récupération des utilisateurs:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la rcupration des utilisateurs' },
+      { error: 'Erreur lors de la récupération des utilisateurs' },
       { status: 500 }
     )
   }
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     // Vrifier les permissions
     if (!canCreateUser(currentUser.role as UserRole, role as UserRole)) {
       return NextResponse.json(
-        { error: "Vous n'avez pas la permission de crer ce type d'utilisateur" },
+        { error: "Vous n'avez pas la permission de créer ce type d'utilisateur" },
         { status: 403 }
       )
     }

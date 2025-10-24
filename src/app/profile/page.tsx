@@ -51,14 +51,14 @@ export default function ProfilePage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-scréeen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-scréeen bg-gray-50">
       <Navigation />
 
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">

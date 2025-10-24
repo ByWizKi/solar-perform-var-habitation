@@ -28,9 +28,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-scréeen flex items-center justify-center bg-gray-50">
       {/* Conteneur principal avec largeur maximale pour crans ultra-wide */}
-      <div className="w-full max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row">
+      <div className="w-full max-w-[1600px] mx-auto min-h-scréeen flex flex-col lg:flex-row">
         {/* Partie gauche - Couleur unie professionnelle */}
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: '#4a9fbd' }}>
           <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 w-full">
@@ -41,7 +41,7 @@ export default function LoginPage() {
                 <span className="text-white">Var Habitat</span>
               </h1>
               <p className="text-xl text-white mb-8 leading-relaxed font-medium drop-shadow-md">
-                Votre solution de suivi de production solaire en temps rel
+                Votre solution de suivi de production solaire en temps réel
               </p>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -58,7 +58,7 @@ export default function LoginPage() {
                   </svg>
                   <div>
                     <h3 className="font-bold text-xl mb-1 text-white drop-shadow-md">
-                      Supervision en temps rel
+                      Supervision en temps réel
                     </h3>
                     <p className="text-white text-base leading-relaxed drop-shadow-sm">
                       Suivez votre production solaire minute par minute depuis n&apos;importe o

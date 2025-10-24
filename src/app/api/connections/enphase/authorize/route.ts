@@ -18,7 +18,7 @@ async function handler(req: AuthRequest) {
     // Si une connexion existe dj et qu'elle a un systemId, pas besoin de rautoriser
     if (existingConnection && existingConnection.systemId) {
       console.log(
-        ` Connexion Enphase existante trouve pour l'utilisateur ${userId} (systme: ${existingConnection.systemId})`
+        ` Connexion Enphase existante trouve pour l'utilisateur ${userId} (système: ${existingConnection.systemId})`
       )
       return NextResponse.json({
         alreadyConnected: true,

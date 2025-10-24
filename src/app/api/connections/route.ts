@@ -49,7 +49,7 @@ async function handler(req: AuthRequest) {
 
     return NextResponse.json({ connections: formattedConnections })
   } catch (error) {
-    console.error('Erreur lors de la rcupration des connexions:', error)
+    console.error('Erreur lors de la récupération des connexions:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

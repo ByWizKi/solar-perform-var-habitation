@@ -30,7 +30,7 @@ export default function AdminPage() {
     password: '',
     firstName: '',
     lastName: '',
-    // Super Admin cre des Admins, Admin cre des Viewers
+    // Super Admin crée des Admins, Admin crée des Viewers
     role: isSuperAdmin() ? UserRole.ADMIN : UserRole.VIEWER,
   })
   const [error, setError] = useState('')
@@ -98,7 +98,7 @@ export default function AdminPage() {
           password: '',
           firstName: '',
           lastName: '',
-          // Super Admin cre des Admins, Admin cre des Viewers
+          // Super Admin crée des Admins, Admin crée des Viewers
           role: isSuperAdmin() ? UserRole.ADMIN : UserRole.VIEWER,
         })
         setShowCreateForm(false)
@@ -169,14 +169,14 @@ export default function AdminPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-scréeen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-scréeen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">

@@ -87,7 +87,7 @@ export default function SuperAdminDashboardPage() {
         setSystems(data.systems || [])
       }
     } catch (error) {
-      console.error('Erreur lors de la rcupration des systmes:', error)
+      console.error('Erreur lors de la récupération des systèmes:', error)
     } finally {
       setLoadingSystems(false)
     }
@@ -101,14 +101,14 @@ export default function SuperAdminDashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-scréeen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-scréeen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -117,21 +117,21 @@ export default function SuperAdminDashboardPage() {
             Dashboard Super Admin
           </h1>
           <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
-            Vue d&apos;ensemble de tous les systmes solaires connects
+            Vue d&apos;ensemble de tous les systèmes solaires connects
           </p>
         </div>
 
         {loadingSystems ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">Chargement des systmes...</p>
+            <p className="text-gray-500">Chargement des systèmes...</p>
           </div>
         ) : systems.length === 0 ? (
           <Card className="bg-blue-50 border-blue-200">
             <div className="text-center py-8">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun systme connect</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connect</h3>
               <p className="text-blue-700">
-                Les administrateurs doivent connecter leurs systmes Enphase pour que vous puissiez
-                voir les donnes ici.
+                Les administrateurs doivent connecter leurs systèmes Enphase pour que vous puissiez
+                voir les données ici.
               </p>
             </div>
           </Card>
@@ -169,7 +169,7 @@ export default function SuperAdminDashboardPage() {
               </Card>
             </div>
 
-            {/* Liste des systmes */}
+            {/* Liste des systèmes */}
             <Card>
               <h2 className="text-xl font-semibold mb-4">Systmes solaires</h2>
               <div className="space-y-4">
@@ -250,7 +250,7 @@ export default function SuperAdminDashboardPage() {
 
                     {system.lastSync && (
                       <p className="text-xs text-gray-400 mt-3">
-                        Dernire synchronisation:{' '}
+                        Dernière synchronisation:{' '}
                         {new Date(system.lastSync).toLocaleDateString('fr-FR', {
                           day: 'numeric',
                           month: 'short',

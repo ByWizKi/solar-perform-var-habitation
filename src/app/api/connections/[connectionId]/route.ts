@@ -34,16 +34,16 @@ async function deleteHandler(req: AuthRequest, { params }: { params: { connectio
       return NextResponse.json({ error: 'Connexion non trouve ou accs refus' }, { status: 404 })
     }
 
-    // Log des donnes qui vont tre supprimes
+    // Log des données qui vont tre supprimées
     console.log(`[DELETE]  Suppression de la connexion Enphase (ID: ${connectionId})`)
     console.log(`[DATA] Donnes  supprimer :`)
-    console.log(`   - ${connection._count.productionData} donnes de production`)
+    console.log(`   - ${connection._count.productionData} données de production`)
     console.log(`   - ${connection._count.apiCallLogs} logs d'appels API`)
 
     // Calculer le total d'enregistrements
     const totalRecords = connection._count.productionData + connection._count.apiCallLogs
 
-    // Supprimer la connexion (la cascade supprimera automatiquement toutes les donnes lies)
+    // Supprimer la connexion (la cascade supprimera automatiquement toutes les données lies)
     await prisma.enphaseConnection.delete({
       where: {
         id: connectionId,
@@ -55,7 +55,7 @@ async function deleteHandler(req: AuthRequest, { params }: { params: { connectio
 
     return NextResponse.json({
       success: true,
-      message: 'Connexion et toutes les donnes associes supprimes avec succs',
+      message: 'Connexion et toutes les données associes supprimées avec succs',
       deletedRecords: {
         systemId: connection.systemId,
         systemName: connection.systemName,

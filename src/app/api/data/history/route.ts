@@ -8,7 +8,7 @@ const PRIX_KWH_EURO = 0.2062 // Prix moyen en France 2024
 
 /**
  * GET /api/data/history - Rcuprer l'historique des productions journalires (14 jours)
- * Rcupre automatiquement les donnes manquantes depuis Enphase
+ * Rcupre automatiquement les données manquantes depuis Enphase
  */
 export async function GET(request: NextRequest) {
   try {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'systemId requis' }, { status: 400 })
     }
 
-    // Vrifier que l'utilisateur a accs  ce systme
+    // Vrifier que l'utilisateur a accs  ce système
     let connection = await prisma.enphaseConnection.findFirst({
       where: {
         userId: payload.userId,
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     })
 
     if (!connection) {
-      // Si l'utilisateur n'a pas directement la connexion, vrifier si c'est un visualisateur
+      // Si l'utilisateur n'a pas directement la connexion, vérifier si c'est un visualisateur
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
         select: { role: true, createdById: true },
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       last14Days.push(date.toISOString().split('T')[0])
     }
 
-    // Rcuprer les donnes de production journalires existantes pour ces jours
+    // Rcuprer les données de production journalires existantes pour ces jours
     const startDate = new Date(last14Days[0])
     const existingSummaries = await prisma.productionData.findMany({
       where: {
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
       orderBy: { timestamp: 'asc' },
     })
 
-    // Mapper les donnes existantes par jour (garder la plus rcente si plusieurs entres)
+    // Mapper les données existantes par jour (garder la plus rcente si plusieurs entres)
     const dataByDay = new Map<string, { production: number; lifetime: number }>()
     existingSummaries.forEach((summary) => {
       const dateKey = summary.timestamp.toISOString().split('T')[0]
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
     console.log(`[UP] En cache: ${dataByDay.size}/${last14Days.length} jours`)
     console.log(`[DOWN] Manquants: ${missingDays.length} jours`)
 
-    // [ATTENTION] RGLE IMPORTANTE : Appel API UNIQUEMENT si des donnes manquent !
+    // [ATTENTION] RGLE IMPORTANTE : Appel API UNIQUEMENT si des données manquent !
     if (missingDays.length > 0) {
       console.log(
         `\n[API] [API] Rcupration depuis Enphase (1 requte pour ${missingDays.length} jours)`
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
       const accessToken = await enphaseService.ensureValidToken(payload.userId)
 
       try {
-        // UNE SEULE requte pour rcuprer toutes les donnes
+        // UNE SEULE requte pour rcuprer toutes les données
         // L'API Enphase retourne toujours 888 jours, peu importe les dates demandes
         const lifetimeData = await enphaseService.getProductionData(
           systemId,
@@ -226,7 +226,7 @@ export async function GET(request: NextRequest) {
         console.log('='.repeat(80) + '\n')
       }
     } else {
-      console.log(`\n[CACHE] [CACHE] Toutes les donnes sont en base  0 appel API`)
+      console.log(`\n[CACHE] [CACHE] Toutes les données sont en base  0 appel API`)
       console.log('='.repeat(80) + '\n')
     }
 
@@ -256,9 +256,9 @@ export async function GET(request: NextRequest) {
       totalEuros: Math.round(history.reduce((sum, day) => sum + day.coutEuros, 0) * 100) / 100,
     })
   } catch (error: any) {
-    console.error("Erreur lors de la rcupration de l'historique:", error)
+    console.error("Erreur lors de la récupération de l'historique:", error)
     return NextResponse.json(
-      { error: "Erreur lors de la rcupration de l'historique" },
+      { error: "Erreur lors de la récupération de l'historique" },
       { status: 500 }
     )
   }

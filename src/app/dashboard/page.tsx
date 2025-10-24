@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, lazy, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import Navigation from '@/components/Navigation'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import EcoFacts from '@/components/EcoFacts'
+
+// Lazy loading des composants lourds pour réduire le bundle initial
+const EcoFacts = lazy(() => import('@/components/EcoFacts'))
 
 // Prix du kWh en euros (configurable)
 const PRIX_KWH_EURO = 0.2062 // Prix moyen en France 2024
@@ -143,11 +145,11 @@ export default function DashboardPage() {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la rcupration du systemId:', error)
+      console.error('Erreur lors de la récupération du systemId:', error)
     }
   }, [accessToken])
 
-  // Fonction lgre pour vrifier si les donnes ont t mises  jour (viewers uniquement)
+  // Fonction légère pour vérifier si les données ont été mises à jour (viewers uniquement)
   const checkForUpdates = useCallback(async () => {
     if (!accessToken || isAdmin()) return false
 
@@ -161,15 +163,15 @@ export default function DashboardPage() {
         const data = await res.json()
         const newTimestamp = data.lastSyncAt
 
-        // Si le timestamp a chang, retourner true pour dclencher le rechargement
+        // Si le timestamp a chang, retourner true pour déclencher le rechargement
         if (newTimestamp && newTimestamp !== lastSyncTimestamp) {
-          console.log(' [VIEWER] Nouvelles donnes dtectes, rechargement...')
+          console.log(' [VIEWER] Nouvelles données détectées, rechargement...')
           setLastSyncTimestamp(newTimestamp)
           return true
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la vrification des mises  jour:', error)
+      console.error('Erreur lors de la vrification des mises à jour:', error)
     }
     return false
   }, [accessToken, lastSyncTimestamp, isAdmin])
@@ -188,7 +190,7 @@ export default function DashboardPage() {
         setStats(data)
       }
     } catch (error) {
-      console.error('Erreur lors de la rcupration des stats:', error)
+      console.error('Erreur lors de la récupération des stats:', error)
     } finally {
       setLoadingStats(false)
     }
@@ -210,7 +212,7 @@ export default function DashboardPage() {
         setHistory(data.history || [])
       }
     } catch (error) {
-      console.error("Erreur lors de la rcupration de l'historique:", error)
+      console.error("Erreur lors de la récupération de l'historique:", error)
     } finally {
       setLoadingHistory(false)
     }
@@ -222,7 +224,7 @@ export default function DashboardPage() {
     try {
       setLoadingStats(true)
 
-      // D'abord, synchroniser les donnes depuis Enphase (seulement pour les admins)
+      // D'abord, synchroniser les données depuis Enphase (seulement pour les admins)
       if (isAdmin()) {
         const refreshRes = await fetch(`/api/data/refresh?systemId=${systemId}`, {
           method: 'POST',
@@ -248,12 +250,12 @@ export default function DashboardPage() {
             // IMPORTANT: Mettre  jour le compteur mme en cas d'erreur 429
             setRefreshCount(maxRefreshes)
             alert(errorData.message || 'Limite quotidienne atteinte')
-            // Ne pas return, on charge quand mme les donnes existantes
+            // Ne pas return, on charge quand mme les données existantes
           }
         }
       }
 
-      // Ensuite, rcuprer les stats mises  jour (mme si refresh a chou)
+      // Ensuite, rcuprer les stats mises à jour (mme si refresh a chou)
       await fetchStats()
       await fetchHistory()
     } catch (error) {
@@ -296,19 +298,19 @@ export default function DashboardPage() {
     if (isAdmin()) {
       // Admin : Actualisation toutes les heures
       intervalId = setInterval(() => {
-        console.log('[SYNC] [ADMIN] Actualisation automatique des donnes...')
+        console.log('[SYNC] [ADMIN] Actualisation automatique des données...')
         handleRefresh()
       }, 60 * 60 * 1000) // 1 heure
     } else {
-      // Viewer : Vrification lgre toutes les 5 secondes (juste le timestamp)
+      // Viewer : Vrification légère toutes les 5 secondes (juste le timestamp)
       intervalId = setInterval(async () => {
         const hasUpdates = await checkForUpdates()
         if (hasUpdates) {
-          // Recharger les donnes si changement dtect
+          // Recharger les données si changement dtect
           await fetchStats()
           await fetchHistory()
         }
-      }, 5 * 1000) // 5 secondes - requte trs lgre
+      }, 5 * 1000) // 5 secondes - requte trs légère
     }
 
     // Nettoyer l'intervalle quand le composant est dmont
@@ -319,14 +321,14 @@ export default function DashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-scréeen flex items-center justify-center">
         <p>Chargement...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-scréeen bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -334,7 +336,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-gray-600">
-              Bienvenue, {user.firstName}. Consultez vos donnes de production solaire.
+              Bienvenue, {user.firstName}. Consultez vos données de production solaire.
             </p>
             {!isAdmin() && (
               <p className="mt-1 text-sm text-blue-600 flex items-center gap-2">
@@ -350,7 +352,7 @@ export default function DashboardPage() {
                 onClick={handleRefresh}
                 disabled={loadingStats || (user.role === 'ADMIN' && refreshCount >= maxRefreshes)}
               >
-                {loadingStats ? 'Actualisation...' : 'Actualiser les donnes'}
+                {loadingStats ? 'Actualisation...' : 'Actualiser les données'}
               </Button>
               {user.role === 'ADMIN' && (
                 <p className="text-sm text-gray-600 mt-2">
@@ -372,7 +374,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Dernire mise  jour - Mise en vidence */}
+        {/* Dernière mise  jour - Mise en vidence */}
         {stats && stats.lastUpdate && (
           <Card className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center justify-between">
@@ -393,7 +395,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Dernire mise jour des donnes</p>
+                  <p className="text-sm font-medium text-gray-700">Dernière mise jour des données</p>
                   <p className="text-lg font-bold text-blue-900">
                     {new Date(stats.lastUpdate).toLocaleDateString('fr-FR', {
                       weekday: 'long',
@@ -426,17 +428,17 @@ export default function DashboardPage() {
         {/* Statistiques principales */}
         {loadingStats ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">Chargement des donnes...</p>
+            <p className="text-gray-500">Chargement des données...</p>
           </div>
         ) : !systemId ? (
           <Card className="bg-blue-50 border-blue-200 mb-8">
             <div className="text-center py-8">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun systme connect</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connect</h3>
               <p className="text-blue-700 mb-4">
-                Connectez votre systme Enphase pour commencer suivre votre production solaire.
+                Connectez votre système Enphase pour commencer suivre votre production solaire.
               </p>
               <Button variant="primary" onClick={() => router.push('/connections')}>
-                Connecter un systme
+                Connecter un système
               </Button>
             </div>
           </Card>
@@ -510,19 +512,27 @@ export default function DashboardPage() {
                     </p>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => {}}>
-                    Voir les dtails
+                    Voir les détails
                   </Button>
                 </div>
               </Card>
             )}
 
-            {/* Fun Facts cologiques - Bass sur la production du jour */}
+            {/* Fun Facts écologiques - Bass sur la production du jour */}
             {stats && stats.today.production > 0 && (
               <div className="mb-8">
-                <EcoFacts
-                  energyTodayWh={stats.today.production}
-                  lifetimeEnergyWh={stats.lifetime.production}
-                />
+                <Suspense
+                  fallback={
+                    <div className="bg-gray-100 rounded-lg p-6 animate-pulse">
+                      <div className="h-32 bg-gray-200 rounded"></div>
+                    </div>
+                  }
+                >
+                  <EcoFacts
+                    energyTodayWh={stats.today.production}
+                    lifetimeEnergyWh={stats.lifetime.production}
+                  />
+                </Suspense>
               </div>
             )}
           </>
@@ -596,7 +606,7 @@ export default function DashboardPage() {
                                     className="text-xs text-gray-400"
                                     style={{ color: '#9ca3af' }}
                                   >
-                                    (pas de donnes)
+                                    (pas de données)
                                   </span>
                                 )}
                               </div>
@@ -639,14 +649,14 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* Rsum du systme - Responsive */}
+        {/* Résumé du système - Responsive */}
         {stats && (
           <div className="mt-8">
-            <Card title="Rsum du Systme">
+            <Card title="Résumé du Systme">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-600">Statut du systme</span>
+                    <span className="text-sm font-medium text-gray-600">Statut du système</span>
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
                         stats.system.status === 'normal'

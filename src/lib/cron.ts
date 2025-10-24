@@ -57,7 +57,7 @@ export function initCronJobs() {
   console.log('  - Nettoyage quotidien des tokens  23h59 (Europe/Paris)')
   console.log("  - Rinitialisation des compteurs d'actualisations quotidiennes  23h59")
   console.log(
-    '  - Les admins peuvent actualiser manuellement les donnes Enphase depuis leur dashboard (max 15/jour)'
+    '  - Les admins peuvent actualiser manuellement les données Enphase depuis leur dashboard (max 15/jour)'
   )
 }
 

@@ -3,8 +3,8 @@
 import { memo, useMemo } from 'react'
 
 interface EcoFactsProps {
-  energyTodayWh: number // nergie produite aujourd'hui en Wh
-  lifetimeEnergyWh?: number // Optionnel: nergie totale pour comparaison
+  energyTodayWh: number // énergie produite aujourd'hui en Wh
+  lifetimeEnergyWh?: number // Optionnel: énergie totale pour comparaison
 }
 
 // Prix du kWh en euros (identique au dashboard)
@@ -16,7 +16,7 @@ function EcoFactsComponent({ energyTodayWh, lifetimeEnergyWh }: EcoFactsProps) {
     const kWh = energyTodayWh / 1000
     const lifetimeKWh = lifetimeEnergyWh ? lifetimeEnergyWh / 1000 : 0
 
-    // Calculs bass sur des donnes relles
+    // Calculs bass sur des données réelles
     const co2Saved = kWh * 0.5 // 0.5 kg CO2 par kWh (moyenne mix nergtique)
     const eurosEarned = (kWh * PRIX_KWH_EURO).toFixed(2) // Tarif moyen lectricit en France
     const phoneCharges = Math.floor(kWh * 200) // 5 Wh par charge de smartphone

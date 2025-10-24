@@ -4,7 +4,7 @@ import {
   verifyRefreshToken,
   generateAccessToken,
   revokeRefreshToken,
-  createAuthTokens,
+  créeateAuthTokens,
 } from '@/lib/auth'
 import { refreshTokenSchema } from '@/lib/validators'
 
@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Refresh token invalide' }, { status: 401 })
     }
 
-    // Rvoquer l'ancien refresh token (avant de crer les nouveaux)
+    // Rvoquer l'ancien refresh token (avant de créer les nouveaux)
     await revokeRefreshToken(validatedData.refreshToken)
 
     // Crer de nouveaux tokens
-    const tokens = await createAuthTokens({
+    const tokens = await créeateAuthTokens({
       id: storedToken.user.id,
       username: storedToken.user.username,
     })

@@ -14,7 +14,7 @@ export async function measurePerformance<T>(
   const { logThreshold = 0, warnThreshold = 1000 } = options
 
   const startTime = performance.now()
-  
+
   try {
     const result = await fn()
     const duration = Math.round(performance.now() - startTime)
@@ -44,11 +44,10 @@ export function withPerformanceLogging(
   handler: (...args: any[]) => Promise<Response>
 ) {
   return async (...args: any[]): Promise<Response> => {
-    return measurePerformance(
-      `API ${routeName}`,
-      () => handler(...args),
-      { logThreshold: 50, warnThreshold: 500 }
-    )
+    return measurePerformance(`API ${routeName}`, () => handler(...args), {
+      logThreshold: 50,
+      warnThreshold: 500,
+    })
   }
 }
 
@@ -66,7 +65,7 @@ export class PerformanceTimer {
   checkpoint(name: string) {
     const duration = Math.round(performance.now() - this.startTime)
     this.checkpoints.set(name, duration)
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`[PERF] ${this.label} - ${name}: ${duration}ms`)
     }
@@ -74,10 +73,10 @@ export class PerformanceTimer {
 
   end() {
     const totalDuration = Math.round(performance.now() - this.startTime)
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`[PERF] ${this.label} - TOTAL: ${totalDuration}ms`)
-      
+
       if (this.checkpoints.size > 0) {
         console.log(`[PERF] ${this.label} - Breakdown:`)
         this.checkpoints.forEach((duration, name) => {
@@ -99,4 +98,3 @@ export function logSlowQuery(query: string, duration: number, threshold = 100) {
     console.warn(`[PERF] Slow DB Query (${duration}ms): ${query.substring(0, 100)}...`)
   }
 }
-

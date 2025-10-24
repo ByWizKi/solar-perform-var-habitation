@@ -66,7 +66,7 @@ export function verifyRefreshToken(token: string): TokenPayload {
 export const verifyToken = verifyAccessToken
 
 // Cre une paire de tokens et stocke le refresh token
-export async function createAuthTokens(user: {
+export async function créeateAuthTokens(user: {
   id: string
   username: string
 }): Promise<AuthTokens> {

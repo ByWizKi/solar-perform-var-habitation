@@ -56,7 +56,7 @@ export default function EnphaseAuthorizePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-scréeen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         <Card>
           <div className="text-center">
@@ -75,14 +75,14 @@ export default function EnphaseAuthorizePage() {
               <div className="space-y-4">
                 <p className="text-gray-600 mb-6">
                   Vous allez tre redirig vers Enphase Energy pour autoriser l&apos;accs  vos
-                  donnes de production solaire.
+                  données de production solaire.
                 </p>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h3 className="font-medium text-blue-900 mb-2">Informations requises</h3>
                   <ul className="text-sm text-blue-800 text-left space-y-1">
                     <li> Identifiants Enlighten (compte Enphase)</li>
-                    <li> Autorisation d&apos;accs aux donnes du systme</li>
+                    <li> Autorisation d&apos;accs aux données du système</li>
                   </ul>
                 </div>
 

@@ -5,7 +5,7 @@ import { getEnphaseService } from './enphase'
 const CACHE_DURATIONS = {
   SYSTEM_INFO: 24 * 60 * 60 * 1000, // 24 heures (infos statiques)
   DEVICES: 24 * 60 * 60 * 1000, // 24 heures (quipements changent rarement)
-  SYSTEM_SUMMARY: 15 * 60 * 1000, // 15 minutes (donnes dynamiques)
+  SYSTEM_SUMMARY: 15 * 60 * 1000, // 15 minutes (données dynamiques)
 }
 
 /**
@@ -59,7 +59,7 @@ export async function getMonthlyApiCallCount(connectionId: string): Promise<numb
 }
 
 /**
- * Rcupre les infos systme avec cache
+ * Rcupre les infos système avec cache
  */
 export async function getCachedSystemInfo(
   connectionId: string,
@@ -69,7 +69,7 @@ export async function getCachedSystemInfo(
 ) {
   const enphaseService = getEnphaseService()
 
-  // Les infos systme sont maintenant stockes dans EnphaseConnection
+  // Les infos système sont maintenant stockes dans EnphaseConnection
   // On peut les rcuprer depuis l si on veut viter l'appel API
   if (!forceRefresh) {
     const connection = await prisma.enphaseConnection.findFirst({
@@ -86,8 +86,8 @@ export async function getCachedSystemInfo(
 
     if (connection && connection.systemName) {
       console.log(`[CACHE] Cache HIT: System info depuis connection`)
-      // Retourne les infos basiques, on fera quand mme un appel API pour les donnes temps rel
-      // Cette section est maintenant simplifie, on fait toujours un appel API pour les donnes fraches
+      // Retourne les infos basiques, on fera quand mme un appel API pour les données temps réel
+      // Cette section est maintenant simplifie, on fait toujours un appel API pour les données fraches
     }
   }
 
@@ -110,7 +110,7 @@ export async function getCachedSystemInfo(
       responseTime
     )
 
-    // Mettre  jour les infos systme dans EnphaseConnection
+    // Mettre  jour les infos système dans EnphaseConnection
     await prisma.enphaseConnection.update({
       where: { id: connectionId },
       data: {
@@ -148,7 +148,7 @@ export async function getCachedSystemDevices(
   const enphaseService = getEnphaseService()
 
   // Appel API direct (le cache des devices a t supprim du schma simplifi)
-  console.log(`[API] [API] Rcupration des devices pour systme ${systemId}`)
+  console.log(`[API] [API] Rcupration des devices pour système ${systemId}`)
   const startTime = Date.now()
 
   try {

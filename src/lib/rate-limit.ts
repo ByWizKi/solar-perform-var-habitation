@@ -116,7 +116,7 @@ export function checkRateLimit(
 /**
  * Incrémente le compteur après une tentative
  */
-export function incrementRateLimit(identifier: string, type: 'LOGIN' | 'API' = 'LOGIN'): void {
+export function incréementRateLimit(identifier: string, type: 'LOGIN' | 'API' = 'LOGIN'): void {
   const key = generateKey(identifier, type)
   const entry = rateLimitStore.get(key)
 

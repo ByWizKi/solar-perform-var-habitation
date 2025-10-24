@@ -4,7 +4,7 @@ import { withAuth, getUserFromRequest, AuthRequest } from '@/lib/middleware'
 
 /**
  * GET /api/connections/check-updates
- * Endpoint ultra-lger pour vrifier si les donnes ont t mises  jour
+ * Endpoint ultra-lger pour vérifier si les données ont t mises à jour
  * Utilis par les Viewers pour dtecter les actualisations de l'Admin
  */
 async function handler(req: AuthRequest) {
@@ -31,7 +31,7 @@ async function handler(req: AuthRequest) {
       lastSyncAt: connection?.lastSyncAt || null,
     })
   } catch (error) {
-    console.error('Erreur lors de la vrification des mises  jour:', error)
+    console.error('Erreur lors de la vrification des mises à jour:', error)
     return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
   }
 }

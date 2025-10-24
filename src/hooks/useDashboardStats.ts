@@ -36,7 +36,7 @@ export function useDashboardStats(accessToken: string | null) {
   const [systemId, setSystemId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+
   // Cache pour éviter les requêtes multiples simultanées
   const fetchInProgress = useRef(false)
   const lastFetchTime = useRef<number>(0)
@@ -77,14 +77,11 @@ export function useDashboardStats(accessToken: string | null) {
         const firstConnection = connections[0]
         setSystemId(firstConnection.systemId)
 
-        const statsRes = await fetch(
-          `/api/data/stats?systemId=${firstConnection.systemId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
+        const statsRes = await fetch(`/api/data/stats?systemId=${firstConnection.systemId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
 
         if (statsRes.ok) {
           const data = await statsRes.json()
@@ -116,4 +113,3 @@ export function useDashboardStats(accessToken: string | null) {
     refetch: fetchStats,
   }
 }
-

@@ -8,19 +8,19 @@ import { UserRole } from '@/types'
 
 describe('Permissions', () => {
   describe('canCreateUser', () => {
-    it('Super Admin peut crer uniquement des Admins', () => {
+    it('Super Admin peut créer uniquement des Admins', () => {
       expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.ADMIN)).toBe(true)
       expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.VIEWER)).toBe(false)
       expect(canCreateUser(UserRole.SUPER_ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
     })
 
-    it('Admin peut crer uniquement des Viewers', () => {
+    it('Admin peut créer uniquement des Viewers', () => {
       expect(canCreateUser(UserRole.ADMIN, UserRole.VIEWER)).toBe(true)
       expect(canCreateUser(UserRole.ADMIN, UserRole.ADMIN)).toBe(false)
       expect(canCreateUser(UserRole.ADMIN, UserRole.SUPER_ADMIN)).toBe(false)
     })
 
-    it('Viewer ne peut crer personne', () => {
+    it('Viewer ne peut créer personne', () => {
       expect(canCreateUser(UserRole.VIEWER, UserRole.VIEWER)).toBe(false)
       expect(canCreateUser(UserRole.VIEWER, UserRole.ADMIN)).toBe(false)
       expect(canCreateUser(UserRole.VIEWER, UserRole.SUPER_ADMIN)).toBe(false)
@@ -34,7 +34,7 @@ describe('Permissions', () => {
       expect(canDeleteUser(UserRole.SUPER_ADMIN, UserRole.SUPER_ADMIN, false)).toBe(false)
     })
 
-    it("Admin peut supprimer uniquement les Viewers qu'il a crs", () => {
+    it("Admin peut supprimer uniquement les Viewers qu'il a créés", () => {
       expect(canDeleteUser(UserRole.ADMIN, UserRole.VIEWER, true)).toBe(true)
       expect(canDeleteUser(UserRole.ADMIN, UserRole.VIEWER, false)).toBe(false)
       expect(canDeleteUser(UserRole.ADMIN, UserRole.ADMIN, true)).toBe(false)
@@ -47,12 +47,12 @@ describe('Permissions', () => {
   })
 
   describe('canRefreshData', () => {
-    it('Super Admin et Admin peuvent actualiser les donnes', () => {
+    it('Super Admin et Admin peuvent actualiser les données', () => {
       expect(canRefreshData(UserRole.SUPER_ADMIN)).toBe(true)
       expect(canRefreshData(UserRole.ADMIN)).toBe(true)
     })
 
-    it('Viewer ne peut pas actualiser les donnes', () => {
+    it('Viewer ne peut pas actualiser les données', () => {
       expect(canRefreshData(UserRole.VIEWER)).toBe(false)
     })
   })
