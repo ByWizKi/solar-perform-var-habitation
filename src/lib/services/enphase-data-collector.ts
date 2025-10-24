@@ -25,15 +25,23 @@ export class EnphaseDataCollector {
     let success = false
     let statusCode = 0
 
+    // Timeout de 30 secondes pour les requêtes Enphase
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 30000)
+
     try {
       response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        signal: controller.signal,
       })
 
       statusCode = response.status
       success = response.ok
+
+      // Nettoyer le timeout
+      clearTimeout(timeoutId)
 
       // Logger l'appel API si connectionId est fourni
       if (connectionId) {
@@ -61,6 +69,35 @@ export class EnphaseDataCollector {
 
       return response.json()
     } catch (error: any) {
+      // Nettoyer le timeout en cas d'erreur
+      clearTimeout(timeoutId)
+
+      // Gestion spécifique du timeout
+      if (error.name === 'AbortError') {
+        const timeoutError = new Error(`Timeout: L'API Enphase n'a pas répondu dans les 30 secondes`)
+        
+        if (connectionId) {
+          const responseTime = Date.now() - startTime
+          console.log(`  [ERREUR] [API] ${endpoint}  TIMEOUT (${responseTime}ms)`)
+          await prisma.apiCallLog
+            .create({
+              data: {
+                connectionId,
+                service: 'enphase',
+                endpoint,
+                method: 'GET',
+                statusCode: 0,
+                success: false,
+                errorMessage: 'Request timeout after 30s',
+                responseTimeMs: responseTime,
+              },
+            })
+            .catch((err) => console.error(`  [ERREUR] [LOG] Erreur logging API: ${err.message}`))
+        }
+        
+        throw timeoutError
+      }
+
       // Logger l'erreur si connectionId est fourni
       if (connectionId) {
         const responseTime = Date.now() - startTime

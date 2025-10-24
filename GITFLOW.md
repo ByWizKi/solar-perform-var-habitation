@@ -12,18 +12,21 @@ Ce projet utilise le modèle Gitflow pour la gestion des branches.
 ### Branches de support
 
 - **`feature/*`** : Nouvelles fonctionnalités
+
   - Création depuis : `develop`
   - Fusion dans : `develop`
   - Convention : `feature/nom-de-la-fonctionnalite`
   - Exemple : `feature/dashboard-admin`, `feature/enphase-integration`
 
 - **`fix/*`** : Corrections de bugs (développement)
+
   - Création depuis : `develop`
   - Fusion dans : `develop`
   - Convention : `fix/description-du-bug`
   - Exemple : `fix/login-error`, `fix/data-display`
 
 - **`hotfix/*`** : Corrections urgentes en production
+
   - Création depuis : `main`
   - Fusion dans : `main` ET `develop`
   - Convention : `hotfix/description-critique`
@@ -147,19 +150,19 @@ Ce projet utilise **Conventional Commits** avec validation automatique via commi
 
 ### Types de commit
 
-| Type | Description | Exemple |
-|------|-------------|---------|
-| `feat` | Nouvelle fonctionnalité | `feat: ajout du tableau de bord admin` |
-| `fix` | Correction de bug | `fix: correction de l'affichage des données` |
-| `docs` | Documentation uniquement | `docs: mise à jour du README` |
-| `style` | Formatage, pas de changement de code | `style: formatage du code avec Prettier` |
-| `refactor` | Refactoring sans bug ni fonctionnalité | `refactor: réorganisation des composants` |
-| `perf` | Amélioration des performances | `perf: optimisation des requêtes DB` |
-| `test` | Ajout ou correction de tests | `test: ajout tests pour AuthService` |
-| `build` | Système de build ou dépendances | `build: mise à jour de Next.js vers 14.2` |
-| `ci` | Configuration CI/CD | `ci: ajout workflow GitHub Actions` |
-| `chore` | Maintenance, configuration | `chore: mise à jour des dépendances` |
-| `revert` | Annulation d'un commit précédent | `revert: annulation du commit abc123` |
+| Type       | Description                            | Exemple                                      |
+| ---------- | -------------------------------------- | -------------------------------------------- |
+| `feat`     | Nouvelle fonctionnalité                | `feat: ajout du tableau de bord admin`       |
+| `fix`      | Correction de bug                      | `fix: correction de l'affichage des données` |
+| `docs`     | Documentation uniquement               | `docs: mise à jour du README`                |
+| `style`    | Formatage, pas de changement de code   | `style: formatage du code avec Prettier`     |
+| `refactor` | Refactoring sans bug ni fonctionnalité | `refactor: réorganisation des composants`    |
+| `perf`     | Amélioration des performances          | `perf: optimisation des requêtes DB`         |
+| `test`     | Ajout ou correction de tests           | `test: ajout tests pour AuthService`         |
+| `build`    | Système de build ou dépendances        | `build: mise à jour de Next.js vers 14.2`    |
+| `ci`       | Configuration CI/CD                    | `ci: ajout workflow GitHub Actions`          |
+| `chore`    | Maintenance, configuration             | `chore: mise à jour des dépendances`         |
+| `revert`   | Annulation d'un commit précédent       | `revert: annulation du commit abc123`        |
 
 ### Règles
 
@@ -290,4 +293,3 @@ Sur GitHub, les branches `main` et `develop` doivent être protégées :
 - [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Commitlint](https://commitlint.js.org/)
-

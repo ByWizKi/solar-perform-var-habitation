@@ -1,12 +1,13 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
+import { env } from './env'
 
-// Configuration JWT
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key'
-const ACCESS_TOKEN_EXPIRY = '7d' // 7 jours (une semaine)
-const REFRESH_TOKEN_EXPIRY = '30d' // 30 jours
+// Configuration JWT - Pas de valeurs par défaut pour la sécurité
+const JWT_SECRET = env.JWT_SECRET
+const JWT_REFRESH_SECRET = env.JWT_REFRESH_SECRET
+const ACCESS_TOKEN_EXPIRY = '15m' // 15 minutes (sécurité renforcée)
+const REFRESH_TOKEN_EXPIRY = '7d' // 7 jours
 
 export interface TokenPayload {
   userId: string

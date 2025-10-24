@@ -119,25 +119,51 @@ cd solar-perform-var-habitation
 
 ### 2. Configuration
 
-Créer un fichier `.env` à la racine :
+**IMPORTANT** : Suivre ces étapes pour une configuration sécurisée.
+
+#### Copier le template
+
+```bash
+cp .env.example .env
+```
+
+#### Générer des secrets forts
+
+```bash
+# Générer JWT_SECRET (minimum 32 caractères)
+openssl rand -base64 32
+
+# Générer JWT_REFRESH_SECRET (différent du premier)
+openssl rand -base64 32
+```
+
+#### Éditer le fichier `.env`
 
 ```env
 # Database
-DATABASE_URL="postgresql://solarperform:solarperform@localhost:5432/solarperform"
+DATABASE_URL="postgresql://solarperform:VOTRE-MOT-DE-PASSE-FORT@localhost:5432/solarperform"
 
-# JWT
-JWT_SECRET="votre-secret-jwt-ultra-securise"
-JWT_REFRESH_SECRET="votre-refresh-secret-ultra-securise"
+# JWT (utiliser les secrets générés ci-dessus)
+JWT_SECRET="le-secret-genere-avec-openssl"
+JWT_REFRESH_SECRET="un-autre-secret-genere-avec-openssl"
 
 # App
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-# Enphase
+# Enphase (obtenir sur https://developer-v4.enphase.com/)
 ENPHASE_CLIENT_ID="votre-client-id"
 ENPHASE_CLIENT_SECRET="votre-client-secret"
 ENPHASE_API_KEY="votre-api-key"
 ENPHASE_REDIRECT_URI="http://localhost:3000/api/connections/enphase/callback"
 ```
+
+#### Sécuriser les permissions
+
+```bash
+chmod 600 .env
+```
+
+**Note** : Le fichier `.env` ne doit JAMAIS être committé dans Git. Il est déjà dans `.gitignore`.
 
 ### 3. Démarrer avec Docker
 
@@ -268,8 +294,10 @@ solar-perform-var-habitation/
 │   │   ├── services/          # Services métier
 │   │   │   ├── enphase.ts     # Client API Enphase
 │   │   │   ├── enphase-cache.ts          # Gestion du cache
-│   │   │   └── enphase-data-collector.ts # Collecte de données
-│   │   ├── auth.ts            # Utilitaires d'authentification
+│   │   │   └── enphase-data-collector.ts # Collecte de données (avec timeout)
+│   │   ├── auth.ts            # Utilitaires d'authentification (JWT)
+│   │   ├── env.ts             # Validation des variables d'environnement
+│   │   ├── rate-limit.ts      # Système de rate limiting
 │   │   ├── permissions.ts     # Gestion des permissions
 │   │   ├── middleware.ts      # Middlewares
 │   │   ├── prisma.ts          # Client Prisma
@@ -286,6 +314,7 @@ solar-perform-var-habitation/
 ├── public/                    # Fichiers statiques
 │   └── var-habitat-logo.png
 ├── .husky/                   # Hooks Git (commitlint)
+├── .env.example              # Template des variables d'environnement
 ├── commitlint.config.js      # Configuration commitlint
 ├── GIT_GUIDE.md              # Guide Git basique
 ├── GITFLOW.md                # Stratégie Gitflow et conventions
@@ -344,6 +373,7 @@ Ce projet utilise **Gitflow** comme stratégie de branches et **Conventional Com
 - Types disponibles : `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
 **Branches principales** :
+
 - `main` : Production stable
 - `develop` : Intégration des développements
 - `feature/*` : Nouvelles fonctionnalités
@@ -354,13 +384,34 @@ Ce projet utilise **Gitflow** comme stratégie de branches et **Conventional Com
 
 ### Sécurité
 
+**Authentification et Tokens**
 - Mots de passe hachés avec bcrypt (10 rounds)
-- Tokens JWT avec expiration (access token + refresh token)
+- Tokens JWT avec expiration courte (15 minutes pour access, 7 jours pour refresh)
 - Refresh tokens pour sessions longues durée
-- Variables d'environnement pour tous les secrets
+- Pas de valeurs par défaut pour les secrets (validation au démarrage)
+
+**Protection des Secrets**
+- Variables d'environnement validées au démarrage (`src/lib/env.ts`)
+- Longueur minimale de 32 caractères pour les secrets JWT
+- Fichier `.env.example` pour documentation sans exposer les secrets
+- `.env` protégé dans `.gitignore`
+
+**Validation et Protection**
 - Validation des entrées avec Zod sur toutes les routes API
 - Middlewares d'authentification et d'autorisation
-- Gestion fine des permissions par rôle
+- Gestion fine des permissions par rôle (VIEWER, ADMIN, SUPER_ADMIN)
+- Protection contre brute-force (rate limiting sur login)
+- Headers de sécurité HTTP (HSTS, X-Frame-Options, CSP, etc.)
+
+**Rate Limiting**
+- Maximum 5 tentatives de connexion par username/IP
+- Verrouillage de 15 minutes après 5 échecs
+- Réinitialisation automatique après connexion réussie
+
+**Timeouts et Résilience**
+- Timeout de 30 secondes sur toutes les requêtes Enphase
+- Gestion des erreurs avec messages génériques côté client
+- Logging détaillé côté serveur uniquement
 
 ### Architecture
 

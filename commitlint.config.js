@@ -5,17 +5,17 @@ module.exports = {
       2,
       'always',
       [
-        'feat',     // Nouvelle fonctionnalité
-        'fix',      // Correction de bug
-        'docs',     // Documentation uniquement
-        'style',    // Changements qui n'affectent pas le sens du code (espaces, formatage, etc.)
+        'feat', // Nouvelle fonctionnalité
+        'fix', // Correction de bug
+        'docs', // Documentation uniquement
+        'style', // Changements qui n'affectent pas le sens du code (espaces, formatage, etc.)
         'refactor', // Refactoring de code (ni bug ni fonctionnalité)
-        'perf',     // Amélioration des performances
-        'test',     // Ajout ou correction de tests
-        'build',    // Changements du système de build ou dépendances externes
-        'ci',       // Changements des fichiers de configuration CI
-        'chore',    // Autres changements qui ne modifient pas src ou les fichiers de test
-        'revert',   // Revert d'un commit précédent
+        'perf', // Amélioration des performances
+        'test', // Ajout ou correction de tests
+        'build', // Changements du système de build ou dépendances externes
+        'ci', // Changements des fichiers de configuration CI
+        'chore', // Autres changements qui ne modifient pas src ou les fichiers de test
+        'revert', // Revert d'un commit précédent
       ],
     ],
     'type-case': [2, 'always', 'lower-case'],
@@ -24,5 +24,4 @@ module.exports = {
     'subject-full-stop': [2, 'never', '.'],
     'header-max-length': [2, 'always', 100],
   },
-};
-
+}
