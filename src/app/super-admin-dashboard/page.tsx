@@ -117,7 +117,7 @@ export default function SuperAdminDashboardPage() {
             Dashboard Super Admin
           </h1>
           <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
-            Vue d&apos;ensemble de tous les systèmes solaires connects
+            Vue d&apos;ensemble de tous les systèmes solaires connectés
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function SuperAdminDashboardPage() {
         ) : systems.length === 0 ? (
           <Card className="bg-blue-50 border-blue-200">
             <div className="text-center py-8">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connect</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connecté</h3>
               <p className="text-blue-700">
                 Les administrateurs doivent connecter leurs systèmes Enphase pour que vous puissiez
                 voir les données ici.
@@ -192,12 +192,12 @@ export default function SuperAdminDashboardPage() {
                           </span>
                         </div>
                         <p className="text-sm text-gray-600" style={{ color: '#6b7280' }}>
-                          Propritaire: {system.owner.firstName} {system.owner.lastName} (
+                          Propriétaire: {system.owner.firstName} {system.owner.lastName} (
                           {system.owner.username})
                         </p>
                         {system.data?.systemSize && (
                           <p className="text-sm text-gray-600" style={{ color: '#6b7280' }}>
-                            Puissance installe: {system.data.systemSize.toFixed(2)} kW
+                            Puissance installée: {system.data.systemSize.toFixed(2)} kW
                           </p>
                         )}
                       </div>
@@ -244,7 +244,7 @@ export default function SuperAdminDashboardPage() {
                       </div>
                     ) : (
                       <p className="text-sm text-gray-500 mt-4" style={{ color: '#6b7280' }}>
-                        Aucune donne disponible
+                        Aucune donnée disponible
                       </p>
                     )}
 
