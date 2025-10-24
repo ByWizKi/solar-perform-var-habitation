@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// UTILISATEURS ET AUTHENTIFICATION
+// ============================================================================
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  VIEWER
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  username           String   @unique
+  password           String // Hashé bcrypt
+  firstName          String
+  lastName           String
+  role               UserRole @default(VIEWER)
+  mustChangePassword Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Limite d'actualisation (15/jour pour ADMIN)
+  dailyRefreshCount Int       @default(0)
+  lastRefreshDate   DateTime?
+
+  // Hiérarchie
+  createdById  String?
+  createdBy    User?   @relation("UserCreatedBy", fields: [createdById], references: [id])
+  createdUsers User[]  @relation("UserCreatedBy")
+
+  // Relations
+  refreshTokens      RefreshToken[]
+  enphaseConnections EnphaseConnection[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+// ============================================================================
+// CONNEXION ENPHASE (Service-specific)
+// ============================================================================
+
+model EnphaseConnection {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Tokens OAuth Enphase
+  accessToken  String   @db.Text
+  refreshToken String   @db.Text
+  expiresAt    DateTime
+
+  // Système Enphase (UNIQUE GLOBAL)
+  systemId   String  @unique // Un système = un seul admin
+  systemName String?
+  systemSize Float? // kW
+  timezone   String?
+
+  // Métadonnées
+  isActive   Boolean   @default(true)
+  lastSyncAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  productionData ProductionData[]
+  apiCallLogs    ApiCallLog[]
+
+  @@unique([userId, systemId])
+  @@index([userId])
+  @@map("enphase_connections")
+}
+
+// ============================================================================
+// DONNÉES DE PRODUCTION (Normalisées - Multi-services)
+// ============================================================================
+
+// Table centrale unifiée pour TOUS les services
+model ProductionData {
+  id String @id @default(cuid())
+
+  // Identification
+  connectionId   String // ID de la connexion (enphase, solaredge, etc.)
+  connectionType String // "enphase", "solaredge", "fronius"
+  systemId       String // ID système chez le fournisseur
+
+  // Source des données (pour faciliter les requêtes)
+  source String? // "summary", "energy_lifetime", "rgm_stats", etc.
+
+  // Métriques (normalisées)
+  energy Float // Wh - énergie sur la période
+  power  Float // W - puissance moyenne sur la période
+
+  // Temporalité
+  timestamp DateTime // Début de la période
+  interval  Int // Durée en secondes (300, 900, 3600, 86400)
+
+  // Métadonnées (optionnelles)
+  metadata Json? // Données spécifiques au service
+
+  createdAt DateTime @default(now())
+
+  // Relation polymorphique
+  enphaseConnection EnphaseConnection? @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([connectionId, timestamp(sort: Desc)])
+  @@index([systemId, timestamp(sort: Desc)])
+  @@index([timestamp(sort: Desc)])
+  @@index([source])
+  @@map("production_data")
+}
+
+// ============================================================================
+// LOGS API
+// ============================================================================
+
+model ApiCallLog {
+  id           String @id @default(cuid())
+  connectionId String
+
+  service  String // "enphase", "solaredge"
+  endpoint String
+  method   String // "GET", "POST"
+
+  statusCode   Int
+  success      Boolean
+  errorMessage String? @db.Text
+
+  responseTimeMs Int?
+  timestamp      DateTime @default(now())
+
+  // Relation polymorphique
+  enphaseConnection EnphaseConnection? @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([connectionId, timestamp(sort: Desc)])
+  @@index([service, success])
+  @@map("api_call_logs")
+}
