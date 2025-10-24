@@ -18,7 +18,7 @@ async function handler(req: AuthRequest) {
         mustChangePassword: true,
         dailyRefreshCount: true,
         lastRefreshDate: true,
-        créeatedAt: true,
+        createdAt: true,
         updatedAt: true,
       },
     })

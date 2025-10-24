@@ -4,7 +4,7 @@ import {
   verifyRefreshToken,
   generateAccessToken,
   revokeRefreshToken,
-  créeateAuthTokens,
+  createAuthTokens,
 } from '@/lib/auth'
 import { refreshTokenSchema } from '@/lib/validators'
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     await revokeRefreshToken(validatedData.refreshToken)
 
     // Créer de nouveaux tokens
-    const tokens = await créeateAuthTokens({
+    const tokens = await createAuthTokens({
       id: storedToken.user.id,
       username: storedToken.user.username,
     })

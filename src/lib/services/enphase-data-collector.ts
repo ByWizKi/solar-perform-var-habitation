@@ -48,7 +48,7 @@ export class EnphaseDataCollector {
         const responseTime = Date.now() - startTime
         console.log(`  [API] [API] ${endpoint}  ${statusCode} (${responseTime}ms)`)
         await prisma.apiCallLog
-          .créeate({
+          .create({
             data: {
               connectionId,
               service: 'enphase',
@@ -82,7 +82,7 @@ export class EnphaseDataCollector {
           const responseTime = Date.now() - startTime
           console.log(`  [ERREUR] [API] ${endpoint}  TIMEOUT (${responseTime}ms)`)
           await prisma.apiCallLog
-            .créeate({
+            .create({
               data: {
                 connectionId,
                 service: 'enphase',
@@ -105,7 +105,7 @@ export class EnphaseDataCollector {
         const responseTime = Date.now() - startTime
         console.log(`  [ERREUR] [API] ${endpoint}  ERREUR (${responseTime}ms): ${error.message}`)
         await prisma.apiCallLog
-          .créeate({
+          .create({
             data: {
               connectionId,
               service: 'enphase',
@@ -143,7 +143,7 @@ export class EnphaseDataCollector {
     )
 
     // Stocker les données de production actuelles
-    await prisma.productionData.créeate({
+    await prisma.productionData.create({
       data: {
         connectionId,
         connectionType: 'enphase',
@@ -249,7 +249,7 @@ export class EnphaseDataCollector {
 
       // Insertion par batch pour optimiser
       if (batchData.length > 0) {
-        await prisma.productionData.créeateMany({
+        await prisma.productionData.createMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -327,7 +327,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.créeateMany({
+        await prisma.productionData.createMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -409,7 +409,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.créeateMany({
+        await prisma.productionData.createMany({
           data: batchData,
           skipDuplicates: true,
         })
@@ -482,7 +482,7 @@ export class EnphaseDataCollector {
           }))
 
           if (batchData.length > 0) {
-            await prisma.productionData.créeateMany({
+            await prisma.productionData.createMany({
               data: batchData,
               skipDuplicates: true,
             })
@@ -603,7 +603,7 @@ export class EnphaseDataCollector {
       }))
 
       if (batchData.length > 0) {
-        await prisma.productionData.créeateMany({
+        await prisma.productionData.createMany({
           data: batchData,
           skipDuplicates: true,
         })

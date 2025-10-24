@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         systemSize: true,
         timezone: true,
         lastSyncAt: true,
-        créeatedAt: true,
+        createdAt: true,
         user: {
           select: {
             id: true,
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        créeatedAt: 'desc',
+        createdAt: 'desc',
       },
     })
 

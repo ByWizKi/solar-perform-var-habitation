@@ -31,14 +31,14 @@ async function handler(req: AuthRequest) {
     if (!connection) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { role: true, créeatedById: true },
+        select: { role: true, createdById: true },
       })
 
-      if (user?.role === 'VIEWER' && user.créeatedById) {
+      if (user?.role === 'VIEWER' && user.createdById) {
         // Le viewer peut accder aux données de son crateur (admin)
         connection = await prisma.enphaseConnection.findFirst({
           where: {
-            userId: user.créeatedById,
+            userId: user.createdById,
             systemId,
           },
           select: {
@@ -131,7 +131,7 @@ async function handler(req: AuthRequest) {
           if (daysSinceStart >= 0 && daysSinceStart < productionArray.length) {
             const firstDayLifetime = productionArray[daysSinceStart]
 
-            await prisma.productionData.créeate({
+            await prisma.productionData.create({
               data: {
                 connectionId: connection.id,
                 connectionType: 'enphase',

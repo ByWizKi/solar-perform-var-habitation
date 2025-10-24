@@ -163,7 +163,7 @@ async function handler(req: AuthRequest) {
               }
 
               if (batchData.length > 0) {
-                await prisma.productionData.créeateMany({
+                await prisma.productionData.createMany({
                   data: batchData,
                   skipDuplicates: true,
                 })
@@ -221,7 +221,7 @@ async function handler(req: AuthRequest) {
               }
 
               if (batchData.length > 0) {
-                await prisma.productionData.créeateMany({
+                await prisma.productionData.createMany({
                   data: batchData,
                   skipDuplicates: true,
                 })

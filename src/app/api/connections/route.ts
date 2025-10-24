@@ -9,13 +9,13 @@ async function handler(req: AuthRequest) {
     // Vérifier si l'utilisateur est un viewer
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, créeatedById: true },
+      select: { role: true, createdById: true },
     })
 
     // Dterminer l'ID utilisateur pour rcuprer les connexions
     // Si viewer  utiliser l'ID du crateur (admin)
     // Sinon  utiliser l'ID de l'utilisateur actuel
-    const targetUserId = user?.role === 'VIEWER' && user.créeatedById ? user.créeatedById : userId
+    const targetUserId = user?.role === 'VIEWER' && user.createdById ? user.createdById : userId
 
     // Rcuprer toutes les connexions Enphase de l'utilisateur (ou de son admin si viewer)
     const connections = await prisma.enphaseConnection.findMany({
@@ -28,10 +28,10 @@ async function handler(req: AuthRequest) {
         timezone: true,
         isActive: true,
         lastSyncAt: true,
-        créeatedAt: true,
+        createdAt: true,
       },
       orderBy: {
-        créeatedAt: 'desc',
+        createdAt: 'desc',
       },
     })
 
@@ -44,7 +44,7 @@ async function handler(req: AuthRequest) {
       systemSize: conn.systemSize,
       isActive: conn.isActive,
       lastSyncAt: conn.lastSyncAt,
-      créeatedAt: conn.créeatedAt,
+      createdAt: conn.createdAt,
     }))
 
     return NextResponse.json({ connections: formattedConnections })

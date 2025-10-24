@@ -288,7 +288,7 @@ export class EnphaseService {
         timezone,
         lastSyncAt: new Date(),
       },
-      créeate: {
+      create: {
         userId,
         accessToken,
         refreshToken,

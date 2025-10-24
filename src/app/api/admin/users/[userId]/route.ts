@@ -31,7 +31,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { userI
     // Rcuprer l'utilisateur  supprimer
     const userToDelete = await prisma.user.findUnique({
       where: { id: params.userId },
-      select: { id: true, role: true, créeatedById: true },
+      select: { id: true, role: true, createdById: true },
     })
 
     if (!userToDelete) {
@@ -39,10 +39,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { userI
     }
 
     // Vérifier si c'est le crateur
-    const isCréeator = userToDelete.créeatedById === currentUser.id
+    const isCreator = userToDelete.createdById === currentUser.id
 
     // Vérifier les permissions
-    if (!canDeleteUser(currentUser.role as UserRole, userToDelete.role as UserRole, isCréeator)) {
+    if (!canDeleteUser(currentUser.role as UserRole, userToDelete.role as UserRole, isCreator)) {
       return NextResponse.json(
         { error: "Vous n'avez pas la permission de supprimer cet utilisateur" },
         { status: 403 }
@@ -96,8 +96,8 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
         firstName: true,
         lastName: true,
         role: true,
-        créeatedById: true,
-        créeatedAt: true,
+        createdById: true,
+        createdAt: true,
         updatedAt: true,
       },
     })
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
     }
 
     // Vérifier que l'utilisateur peut voir cet utilisateur
-    if (currentUser.role !== UserRole.SUPER_ADMIN && user.créeatedById !== currentUser.id) {
+    if (currentUser.role !== UserRole.SUPER_ADMIN && user.createdById !== currentUser.id) {
       return NextResponse.json(
         { error: "Vous n'avez pas la permission de voir cet utilisateur" },
         { status: 403 }

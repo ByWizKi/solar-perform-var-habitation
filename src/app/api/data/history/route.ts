@@ -45,17 +45,17 @@ export async function GET(request: NextRequest) {
       // Si l'utilisateur n'a pas directement la connexion, vérifier si c'est un visualisateur
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
-        select: { role: true, créeatedById: true },
+        select: { role: true, createdById: true },
       })
 
-      if (!user || !user.créeatedById) {
+      if (!user || !user.createdById) {
         return NextResponse.json({ error: 'Accs non autoris' }, { status: 403 })
       }
 
       // Vérifier que le crateur a cette connexion
       connection = await prisma.enphaseConnection.findFirst({
         where: {
-          userId: user.créeatedById,
+          userId: user.createdById,
           systemId,
         },
       })
@@ -185,7 +185,7 @@ export async function GET(request: NextRequest) {
 
           // Stocker en base même si production = 0 (jour sans soleil)
           try {
-            await prisma.productionData.créeate({
+            await prisma.productionData.create({
               data: {
                 connectionId: connection.id,
                 connectionType: 'enphase',

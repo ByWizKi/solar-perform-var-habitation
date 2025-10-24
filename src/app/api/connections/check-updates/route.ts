@@ -14,11 +14,11 @@ async function handler(req: AuthRequest) {
     // Vérifier si l'utilisateur est un viewer
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, créeatedById: true },
+      select: { role: true, createdById: true },
     })
 
     // Dterminer l'ID utilisateur pour rcuprer la connexion
-    const targetUserId = user?.role === 'VIEWER' && user.créeatedById ? user.créeatedById : userId
+    const targetUserId = user?.role === 'VIEWER' && user.createdById ? user.createdById : userId
 
     // Rcuprer uniquement le timestamp de dernière synchronisation
     const connection = await prisma.enphaseConnection.findFirst({

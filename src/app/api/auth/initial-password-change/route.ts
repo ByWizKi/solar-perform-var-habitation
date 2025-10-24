@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         lastName: true,
         role: true,
         mustChangePassword: true,
-        créeatedAt: true,
+        createdAt: true,
         dailyRefreshCount: true,
         lastRefreshDate: true,
       },

@@ -1,6 +1,6 @@
 'use client'
 
-import { créeateContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { User as UserType, UserRole } from '@/types'
 
@@ -20,7 +20,7 @@ interface AuthContextType {
   isViewer: () => boolean
 }
 
-const AuthContext = créeateContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)

@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // Super admin peut voir tous les utilisateurs
     // Admin peut voir seulement les utilisateurs qu'il a créés
-    const where = currentUser.role === UserRole.SUPER_ADMIN ? {} : { créeatedById: currentUser.id }
+    const where = currentUser.role === UserRole.SUPER_ADMIN ? {} : { createdById: currentUser.id }
 
     const users = await prisma.user.findMany({
       where,
@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
         firstName: true,
         lastName: true,
         role: true,
-        créeatedById: true,
-        créeatedAt: true,
+        createdById: true,
+        createdAt: true,
         updatedAt: true,
       },
-      orderBy: { créeatedAt: 'desc' },
+      orderBy: { createdAt: 'desc' },
     })
 
     return NextResponse.json({ users })
@@ -114,14 +114,14 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Créer l'utilisateur
-    const user = await prisma.user.créeate({
+    const user = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
         firstName,
         lastName,
         role: role as UserRole,
-        créeatedById: currentUser.id,
+        createdById: currentUser.id,
       },
       select: {
         id: true,
@@ -129,8 +129,8 @@ export async function POST(request: NextRequest) {
         firstName: true,
         lastName: true,
         role: true,
-        créeatedById: true,
-        créeatedAt: true,
+        createdById: true,
+        createdAt: true,
         updatedAt: true,
       },
     })

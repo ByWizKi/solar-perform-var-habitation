@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyPassword, créeateAuthTokens } from '@/lib/auth'
+import { verifyPassword, createAuthTokens } from '@/lib/auth'
 import { loginSchema } from '@/lib/validators'
 import {
   checkRateLimit,
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     resetRateLimit(rateLimitKey, 'LOGIN')
 
     // Gnrer les tokens
-    const tokens = await créeateAuthTokens(user)
+    const tokens = await createAuthTokens(user)
 
     return NextResponse.json({
       message: 'Connexion russie',

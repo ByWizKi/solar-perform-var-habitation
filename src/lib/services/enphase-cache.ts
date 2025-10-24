@@ -21,7 +21,7 @@ export async function logApiCall(
   responseTimeMs?: number
 ) {
   try {
-    await prisma.apiCallLog.créeate({
+    await prisma.apiCallLog.create({
       data: {
         connectionId,
         service: 'enphase',
