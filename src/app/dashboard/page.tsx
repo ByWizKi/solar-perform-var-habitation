@@ -62,7 +62,7 @@ export default function DashboardPage() {
   const [maxRefreshes, setMaxRefreshes] = useState<number>(15)
   const [lastSyncTimestamp, setLastSyncTimestamp] = useState<string | null>(null)
 
-  // Fonction pour recharger le profil utilisateur (pour mettre  jour dailyRefreshCount)
+  // Fonction pour recharger le profil utilisateur (pour mettre à jour dailyRefreshCount)
   const reloadUserProfile = useCallback(async () => {
     if (!accessToken) return
 
@@ -84,7 +84,7 @@ export default function DashboardPage() {
     }
   }, [accessToken])
 
-  // Rediriger le super admin vers son dashboard spcial
+  // Rediriger le super admin vers son dashboard spécial
   useEffect(() => {
     if (!isLoading && user && isSuperAdmin()) {
       router.push('/super-admin-dashboard')
@@ -163,9 +163,9 @@ export default function DashboardPage() {
         const data = await res.json()
         const newTimestamp = data.lastSyncAt
 
-        // Si le timestamp a chang, retourner true pour déclencher le rechargement
+        // Si le timestamp a changé, retourner true pour déclencher le rechargement
         if (newTimestamp && newTimestamp !== lastSyncTimestamp) {
-          console.log(' [VIEWER] Nouvelles données détectées, rechargement...')
+          console.log('[VIEWER] Nouvelles données détectées, rechargement...')
           setLastSyncTimestamp(newTimestamp)
           return true
         }
@@ -235,9 +235,9 @@ export default function DashboardPage() {
 
         if (refreshRes.ok) {
           const refreshData = await refreshRes.json()
-          console.log('[OK] Données synchronises depuis Enphase')
+          console.log('[OK] Données synchronisées depuis Enphase')
 
-          // Mettre  jour le compteur d'actualisations
+          // Mettre à jour le compteur d'actualisations
           if (refreshData.refreshCount !== undefined) {
             setRefreshCount(refreshData.refreshCount)
           }
@@ -247,7 +247,7 @@ export default function DashboardPage() {
         } else {
           const errorData = await refreshRes.json()
           if (refreshRes.status === 429) {
-            // IMPORTANT: Mettre  jour le compteur même en cas d'erreur 429
+            // IMPORTANT: Mettre à jour le compteur même en cas d'erreur 429
             setRefreshCount(maxRefreshes)
             alert(errorData.message || 'Limite quotidienne atteinte')
             // Ne pas return, on charge quand même les données existantes
@@ -255,11 +255,11 @@ export default function DashboardPage() {
         }
       }
 
-      // Ensuite, rcuprer les stats mises à jour (même si refresh a chou)
+      // Ensuite, récupérer les stats mises à jour (même si refresh a échoué)
       await fetchStats()
       await fetchHistory()
     } catch (error) {
-      console.error('Erreur lors du rafrachissement:', error)
+      console.error('Erreur lors du rafraîchissement:', error)
     } finally {
       setLoadingStats(false)
     }
@@ -275,7 +275,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (user && accessToken) {
       fetchSystemId()
-      // Recharger le profil pour avoir le compteur  jour
+      // Recharger le profil pour avoir le compteur à jour
       if (user.role === 'ADMIN') {
         reloadUserProfile()
       }
@@ -289,7 +289,7 @@ export default function DashboardPage() {
     }
   }, [systemId, accessToken, fetchStats, fetchHistory])
 
-  // Auto-actualisation intelligente selon le rle
+  // Auto-actualisation intelligente selon le rôle
   useEffect(() => {
     if (!systemId || !accessToken) return
 
@@ -313,7 +313,7 @@ export default function DashboardPage() {
       }, 5 * 1000) // 5 secondes - requête très légère
     }
 
-    // Nettoyer l'intervalle quand le composant est dmont
+    // Nettoyer l'intervalle quand le composant est démonté
     return () => {
       clearInterval(intervalId)
     }
@@ -374,7 +374,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Dernière mise à jour - Mise en vidence */}
+        {/* Dernière mise à jour - Mise en évidence */}
         {stats && stats.lastUpdate && (
           <Card className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center justify-between">
@@ -395,7 +395,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Dernière mise jour des données</p>
+                  <p className="text-sm font-medium text-gray-700">Dernière mise à jour des données</p>
                   <p className="text-lg font-bold text-blue-900">
                     {new Date(stats.lastUpdate).toLocaleDateString('fr-FR', {
                       weekday: 'long',
@@ -433,9 +433,9 @@ export default function DashboardPage() {
         ) : !systemId ? (
           <Card className="bg-blue-50 border-blue-200 mb-8">
             <div className="text-center py-8">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connect</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Aucun système connecté</h3>
               <p className="text-blue-700 mb-4">
-                Connectez votre système Enphase pour comêmencer suivre votre production solaire.
+                Connectez votre système Enphase pour commencer à suivre votre production solaire.
               </p>
               <Button variant="primary" onClick={() => router.push('/connections')}>
                 Connecter un système
@@ -457,7 +457,7 @@ export default function DashboardPage() {
                     <div className="text-sm text-green-600">
                       {stats
                         ? `Puissance actuelle: ${formatPower(stats.current.powerNow)}`
-                        : 'Aucune donne'}
+                        : 'Aucune donnée'}
                     </div>
                     <div className="text-sm font-semibold text-blue-600">
                       Valeur:{' '}
@@ -467,10 +467,10 @@ export default function DashboardPage() {
                     </div>
                     <div className="mt-2 pt-2 border-t border-green-200">
                       <p className="text-xs text-gray-600 italic">
-                        💡 Calcul : Production (kWh) {PRIX_KWH_EURO} /kWh
+                        Calcul : Production (kWh) {PRIX_KWH_EURO} /kWh
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Tarif moyen de l&apos;lectricit en France 2024
+                        Tarif moyen de l&apos;électricité en France 2024
                       </p>
                     </div>
                   </div>
@@ -504,10 +504,10 @@ export default function DashboardPage() {
               <Card className="bg-yellow-50 border-yellow-200 mb-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-semibold text-yellow-900">vnements non rsolus</h3>
+                    <h3 className="text-sm font-semibold text-yellow-900">Événements non résolus</h3>
                     <p className="text-xs text-yellow-700 mt-1">
-                      {stats.system.unresolvedEvents} vnement
-                      {stats.system.unresolvedEvents > 1 ? 's' : ''} ncessite
+                      {stats.system.unresolvedEvents} événement
+                      {stats.system.unresolvedEvents > 1 ? 's' : ''} nécessite
                       {stats.system.unresolvedEvents > 1 ? 'nt' : ''} votre attention
                     </p>
                   </div>
@@ -518,7 +518,7 @@ export default function DashboardPage() {
               </Card>
             )}
 
-            {/* Fun Facts éécologiques - Basé sur la production du jour */}
+            {/* Fun Facts écologiques - Basé sur la production du jour */}
             {stats && stats.today.production > 0 && (
               <div className="mb-8">
                 <Suspense
