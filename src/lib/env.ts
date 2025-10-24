@@ -18,8 +18,8 @@ const requiredEnvVars = [
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     throw new Error(
-      `❌ ERREUR DE CONFIGURATION: Variable d'environnement manquante: ${envVar}\n` +
-        `💡 Consultez .env.example pour la configuration requise`
+      `ERREUR DE CONFIGURATION: Variable d'environnement manquante: ${envVar}\n` +
+        `Consultez .env.example pour la configuration requise`
     )
   }
 }
@@ -27,9 +27,9 @@ for (const envVar of requiredEnvVars) {
 // Validation spécifique du format de DATABASE_URL
 if (!process.env.DATABASE_URL!.startsWith('postgresql://')) {
   throw new Error(
-    `❌ ERREUR DE CONFIGURATION: DATABASE_URL doit être une URL PostgreSQL valide\n` +
-      `   Format attendu: postgresql://user:password@host:port/database\n` +
-      `   Reçu: ${process.env.DATABASE_URL!.substring(0, 20)}...`
+    `ERREUR DE CONFIGURATION: DATABASE_URL doit être une URL PostgreSQL valide\n` +
+      `Format attendu: postgresql://user:password@host:port/database\n` +
+      `Reçu: ${process.env.DATABASE_URL!.substring(0, 20)}...`
   )
 }
 
@@ -38,25 +38,25 @@ const MIN_SECRET_LENGTH = 32
 
 if (process.env.JWT_SECRET!.length < MIN_SECRET_LENGTH) {
   throw new Error(
-    `❌ ERREUR DE SÉCURITÉ: JWT_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
-      `   Longueur actuelle: ${process.env.JWT_SECRET!.length} caractères\n` +
-      `   💡 Générez un secret fort avec: openssl rand -base64 32`
+    `ERREUR DE SECURITE: JWT_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
+      `Longueur actuelle: ${process.env.JWT_SECRET!.length} caractères\n` +
+      `Générez un secret fort avec: openssl rand -base64 32`
   )
 }
 
 if (process.env.JWT_REFRESH_SECRET!.length < MIN_SECRET_LENGTH) {
   throw new Error(
-    `❌ ERREUR DE SÉCURITÉ: JWT_REFRESH_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
-      `   Longueur actuelle: ${process.env.JWT_REFRESH_SECRET!.length} caractères\n` +
-      `   💡 Générez un secret fort avec: openssl rand -base64 32`
+    `ERREUR DE SECURITE: JWT_REFRESH_SECRET doit faire au moins ${MIN_SECRET_LENGTH} caractères\n` +
+      `Longueur actuelle: ${process.env.JWT_REFRESH_SECRET!.length} caractères\n` +
+      `Générez un secret fort avec: openssl rand -base64 32`
   )
 }
 
 // Avertissement si les secrets sont identiques
 if (process.env.JWT_SECRET === process.env.JWT_REFRESH_SECRET) {
   console.warn(
-    `⚠️  AVERTISSEMENT DE SÉCURITÉ: JWT_SECRET et JWT_REFRESH_SECRET sont identiques\n` +
-      `   Il est recommandé d'utiliser des secrets différents pour chaque type de token`
+    `AVERTISSEMENT DE SECURITE: JWT_SECRET et JWT_REFRESH_SECRET sont identiques\n` +
+      `Il est recommandé d'utiliser des secrets différents pour chaque type de token`
   )
 }
 
@@ -66,8 +66,8 @@ if (
   process.env.NEXT_PUBLIC_APP_URL?.startsWith('http://localhost')
 ) {
   throw new Error(
-    `❌ ERREUR DE CONFIGURATION: NEXT_PUBLIC_APP_URL ne peut pas être localhost en production\n` +
-      `   Valeur actuelle: ${process.env.NEXT_PUBLIC_APP_URL}`
+    `ERREUR DE CONFIGURATION: NEXT_PUBLIC_APP_URL ne peut pas être localhost en production\n` +
+      `Valeur actuelle: ${process.env.NEXT_PUBLIC_APP_URL}`
   )
 }
 
@@ -94,7 +94,7 @@ export const env = {
 
 // Log de confirmation du chargement (uniquement en développement)
 if (process.env.NODE_ENV === 'development') {
-  console.log('✅ Variables d\'environnement validées avec succès')
+  console.log('[ENV] Variables d\'environnement validées avec succès')
 }
 
 // Type pour TypeScript
