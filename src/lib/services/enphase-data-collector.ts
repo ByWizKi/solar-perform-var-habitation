@@ -74,8 +74,10 @@ export class EnphaseDataCollector {
 
       // Gestion spécifique du timeout
       if (error.name === 'AbortError') {
-        const timeoutError = new Error(`Timeout: L'API Enphase n'a pas répondu dans les 30 secondes`)
-        
+        const timeoutError = new Error(
+          `Timeout: L'API Enphase n'a pas répondu dans les 30 secondes`
+        )
+
         if (connectionId) {
           const responseTime = Date.now() - startTime
           console.log(`  [ERREUR] [API] ${endpoint}  TIMEOUT (${responseTime}ms)`)
@@ -94,7 +96,7 @@ export class EnphaseDataCollector {
             })
             .catch((err) => console.error(`  [ERREUR] [LOG] Erreur logging API: ${err.message}`))
         }
-        
+
         throw timeoutError
       }
 

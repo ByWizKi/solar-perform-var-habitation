@@ -1,83 +1,118 @@
 'use client'
 
+import { memo, useMemo } from 'react'
+
 interface EcoFactsProps {
   energyTodayWh: number // nergie produite aujourd'hui en Wh
   lifetimeEnergyWh?: number // Optionnel: nergie totale pour comparaison
 }
 
-export default function EcoFacts({ energyTodayWh, lifetimeEnergyWh }: EcoFactsProps) {
-  const kWh = energyTodayWh / 1000
-  const lifetimeKWh = lifetimeEnergyWh ? lifetimeEnergyWh / 1000 : 0
+// Prix du kWh en euros (identique au dashboard)
+const PRIX_KWH_EURO = 0.2062 // Prix moyen en France 2024
 
-  // Prix du kWh en euros (identique au dashboard)
-  const PRIX_KWH_EURO = 0.2062 // Prix moyen en France 2024
+function EcoFactsComponent({ energyTodayWh, lifetimeEnergyWh }: EcoFactsProps) {
+  // Mémoïser les calculs pour éviter de les refaire à chaque render
+  const calculations = useMemo(() => {
+    const kWh = energyTodayWh / 1000
+    const lifetimeKWh = lifetimeEnergyWh ? lifetimeEnergyWh / 1000 : 0
 
-  // Calculs bass sur des donnes relles
-  const co2Saved = kWh * 0.5 // 0.5 kg CO2 par kWh (moyenne mix nergtique)
-  const eurosEarned = (kWh * PRIX_KWH_EURO).toFixed(2) // Tarif moyen lectricit en France
-  const phoneCharges = Math.floor(kWh * 200) // 5 Wh par charge de smartphone
-  const teslaCharges = (kWh / 100).toFixed(2) // Tesla Model S = 100 kWh
-  const kmElectricCar = Math.floor(kWh * 5) // ~5 km par kWh pour une voiture lectrique
-  const treesEquivalent = (co2Saved / 25).toFixed(1) // Un arbre absorbe ~25 kg CO2/an
-  const houseDays = (kWh / 10).toFixed(1) // Une maison consomme ~10 kWh/jour en moyenne
-  const ledHours = Math.floor(kWh * 100) // LED 10W = 100 heures par kWh
-  const laptopHours = Math.floor(kWh * 16) // Laptop 60W = ~16h par kWh
+    // Calculs bass sur des donnes relles
+    const co2Saved = kWh * 0.5 // 0.5 kg CO2 par kWh (moyenne mix nergtique)
+    const eurosEarned = (kWh * PRIX_KWH_EURO).toFixed(2) // Tarif moyen lectricit en France
+    const phoneCharges = Math.floor(kWh * 200) // 5 Wh par charge de smartphone
+    const teslaCharges = (kWh / 100).toFixed(2) // Tesla Model S = 100 kWh
+    const kmElectricCar = Math.floor(kWh * 5) // ~5 km par kWh pour une voiture lectrique
+    const treesEquivalent = (co2Saved / 25).toFixed(1) // Un arbre absorbe ~25 kg CO2/an
+    const houseDays = (kWh / 10).toFixed(1) // Une maison consomme ~10 kWh/jour en moyenne
+    const ledHours = Math.floor(kWh * 100) // LED 10W = 100 heures par kWh
+    const laptopHours = Math.floor(kWh * 16) // Laptop 60W = ~16h par kWh
 
-  const facts = [
-    {
-      icon: '💰',
-      value: `${eurosEarned} €`,
-      label: 'Économisés',
-      detail: "Valeur de la production d'aujourd'hui",
-    },
-    {
-      icon: '🌳',
-      value:
-        co2Saved >= 1000 ? `${(co2Saved / 1000).toFixed(2)} tonnes` : `${co2Saved.toFixed(1)} kg`,
-      label: 'CO₂ évité',
-      detail: `Équivalent à planter ${treesEquivalent} arbre${
-        parseFloat(treesEquivalent) > 1 ? 's' : ''
-      }`,
-    },
-    {
-      icon: '📱',
-      value: phoneCharges.toLocaleString('fr-FR'),
-      label: 'Smartphones',
-      detail: 'Recharges complètes',
-    },
-    {
-      icon: '🚗',
-      value: kmElectricCar.toLocaleString('fr-FR'),
-      label: 'km parcourus',
-      detail: 'En voiture électrique',
-    },
-    {
-      icon: '🔋',
-      value: teslaCharges,
-      label: 'Tesla',
-      detail: 'Batteries chargées (100 kWh)',
-    },
-    {
-      icon: '🏠',
-      value: houseDays,
-      label: 'jours',
-      detail: "Alimentation d'une maison",
-    },
-    {
-      icon: '💡',
-      value: ledHours.toLocaleString('fr-FR'),
-      label: 'heures LED',
-      detail: 'Ampoule 10W allumée',
-    },
-    {
-      icon: '💻',
-      value: laptopHours.toLocaleString('fr-FR'),
-      label: 'heures laptop',
-      detail: 'Ordinateur en utilisation',
-    },
-  ]
+    return {
+      kWh,
+      lifetimeKWh,
+      co2Saved,
+      eurosEarned,
+      phoneCharges,
+      teslaCharges,
+      kmElectricCar,
+      treesEquivalent,
+      houseDays,
+      ledHours,
+      laptopHours,
+    }
+  }, [energyTodayWh, lifetimeEnergyWh])
 
-  if (kWh === 0) {
+  const facts = useMemo(() => {
+    const {
+      eurosEarned,
+      co2Saved,
+      treesEquivalent,
+      phoneCharges,
+      kmElectricCar,
+      teslaCharges,
+      houseDays,
+      ledHours,
+      laptopHours,
+    } = calculations
+
+    return [
+      {
+        icon: '💰',
+        value: `${eurosEarned} €`,
+        label: 'Économisés',
+        detail: "Valeur de la production d'aujourd'hui",
+      },
+      {
+        icon: '🌳',
+        value:
+          co2Saved >= 1000
+            ? `${(co2Saved / 1000).toFixed(2)} tonnes`
+            : `${co2Saved.toFixed(1)} kg`,
+        label: 'CO₂ évité',
+        detail: `Équivalent à planter ${treesEquivalent} arbre${
+          parseFloat(treesEquivalent) > 1 ? 's' : ''
+        }`,
+      },
+      {
+        icon: '📱',
+        value: phoneCharges.toLocaleString('fr-FR'),
+        label: 'Smartphones',
+        detail: 'Recharges complètes',
+      },
+      {
+        icon: '🚗',
+        value: kmElectricCar.toLocaleString('fr-FR'),
+        label: 'km parcourus',
+        detail: 'En voiture électrique',
+      },
+      {
+        icon: '🔋',
+        value: teslaCharges,
+        label: 'Tesla',
+        detail: 'Batteries chargées (100 kWh)',
+      },
+      {
+        icon: '🏠',
+        value: houseDays,
+        label: 'jours',
+        detail: "Alimentation d'une maison",
+      },
+      {
+        icon: '💡',
+        value: ledHours.toLocaleString('fr-FR'),
+        label: 'heures LED',
+        detail: 'Ampoule 10W allumée',
+      },
+      {
+        icon: '💻',
+        value: laptopHours.toLocaleString('fr-FR'),
+        label: 'heures laptop',
+        detail: 'Ordinateur en utilisation',
+      },
+    ]
+  }, [calculations])
+
+  if (calculations.kWh === 0) {
     return null
   }
 
@@ -103,17 +138,17 @@ export default function EcoFacts({ energyTodayWh, lifetimeEnergyWh }: EcoFactsPr
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Impact Aujourd&apos;hui </h3>
             <p className="text-sm text-gray-600">
-              Avec {kWh.toFixed(2)} kWh produits aujourd&apos;hui
+              Avec {calculations.kWh.toFixed(2)} kWh produits aujourd&apos;hui
             </p>
           </div>
         </div>
-        {lifetimeKWh > 0 && (
+        {calculations.lifetimeKWh > 0 && (
           <div className="text-right">
             <p className="text-xs text-gray-500">Total depuis installation</p>
             <p className="text-sm font-semibold text-green-700">
-              {lifetimeKWh >= 1000
-                ? `${(lifetimeKWh / 1000).toFixed(1)} MWh`
-                : `${lifetimeKWh.toFixed(0)} kWh`}
+              {calculations.lifetimeKWh >= 1000
+                ? `${(calculations.lifetimeKWh / 1000).toFixed(1)} MWh`
+                : `${calculations.lifetimeKWh.toFixed(0)} kWh`}
             </p>
           </div>
         )}
@@ -137,10 +172,13 @@ export default function EcoFacts({ energyTodayWh, lifetimeEnergyWh }: EcoFactsPr
 
       <div className="mt-4 p-3 bg-white rounded-lg border border-green-200">
         <p className="text-xs text-gray-600 text-center">
-          🌍 Aujourd&apos;hui, vous avez évité {co2Saved.toFixed(2)} kg de CO₂ ! Continuez comme ça
-          pour un avenir plus propre et durable. 🌱
+          🌍 Aujourd&apos;hui, vous avez évité {calculations.co2Saved.toFixed(2)} kg de CO₂ !
+          Continuez comme ça pour un avenir plus propre et durable. 🌱
         </p>
       </div>
     </div>
   )
 }
+
+// Optimisation : Éviter les re-renders et recalculs inutiles
+export default memo(EcoFactsComponent)

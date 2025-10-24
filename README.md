@@ -385,18 +385,21 @@ Ce projet utilise **Gitflow** comme stratégie de branches et **Conventional Com
 ### Sécurité
 
 **Authentification et Tokens**
+
 - Mots de passe hachés avec bcrypt (10 rounds)
 - Tokens JWT avec expiration courte (15 minutes pour access, 7 jours pour refresh)
 - Refresh tokens pour sessions longues durée
 - Pas de valeurs par défaut pour les secrets (validation au démarrage)
 
 **Protection des Secrets**
+
 - Variables d'environnement validées au démarrage (`src/lib/env.ts`)
 - Longueur minimale de 32 caractères pour les secrets JWT
 - Fichier `.env.example` pour documentation sans exposer les secrets
 - `.env` protégé dans `.gitignore`
 
 **Validation et Protection**
+
 - Validation des entrées avec Zod sur toutes les routes API
 - Middlewares d'authentification et d'autorisation
 - Gestion fine des permissions par rôle (VIEWER, ADMIN, SUPER_ADMIN)
@@ -404,11 +407,13 @@ Ce projet utilise **Gitflow** comme stratégie de branches et **Conventional Com
 - Headers de sécurité HTTP (HSTS, X-Frame-Options, CSP, etc.)
 
 **Rate Limiting**
+
 - Maximum 5 tentatives de connexion par username/IP
 - Verrouillage de 15 minutes après 5 échecs
 - Réinitialisation automatique après connexion réussie
 
 **Timeouts et Résilience**
+
 - Timeout de 30 secondes sur toutes les requêtes Enphase
 - Gestion des erreurs avec messages génériques côté client
 - Logging détaillé côté serveur uniquement

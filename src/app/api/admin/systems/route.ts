@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Accs rserv aux Super Admins' }, { status: 403 })
     }
 
-    // Rcuprer tous les systmes Enphase avec les infos des propritaires
+    // Rcuprer tous les systmes avec leurs donnes en UNE SEULE requête (optimisation N+1)
     const connections = await prisma.enphaseConnection.findMany({
       where: {
         isActive: true,
@@ -51,57 +51,56 @@ export async function GET(request: NextRequest) {
             role: true,
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-
-    // Pour chaque connexion, rcuprer les dernires donnes de production
-    const systems = await Promise.all(
-      connections.map(async (connection) => {
-        // Rcuprer le dernier summary (interval=0, source='summary')
-        const latestSummary = await prisma.productionData.findFirst({
+        // Récupérer le dernier summary directement avec la connexion
+        productionData: {
           where: {
-            connectionId: connection.id,
             interval: 0,
             source: 'summary',
           },
           orderBy: {
             timestamp: 'desc',
           },
+          take: 1, // Seulement le plus récent
           select: {
             timestamp: true,
             energy: true,
             power: true,
             metadata: true,
           },
-        })
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
 
-        return {
-          connectionId: connection.id,
-          systemId: connection.systemId,
-          systemName: connection.systemName,
-          systemSize: connection.systemSize,
-          service: 'Enphase', // Service de connexion
-          owner: connection.user,
-          lastSync: connection.lastSyncAt,
-          data: latestSummary
-            ? {
-                timestamp: latestSummary.timestamp,
-                status: (latestSummary.metadata as any)?.status || 'normal',
-                energyToday: latestSummary.energy || 0,
-                energyLifetime: (latestSummary.metadata as any)?.energyLifetime || 0,
-                powerNow: latestSummary.power || 0,
-                consumptionToday: null,
-                consumptionNow: null,
-                batteryPercentage: null,
-                batteryPowerNow: null,
-              }
-            : null,
-        }
-      })
-    )
+    // Transformation des données (pas de requête supplémentaire)
+    const systems = connections.map((connection) => {
+      const latestSummary = connection.productionData[0] || null
+
+      return {
+        connectionId: connection.id,
+        systemId: connection.systemId,
+        systemName: connection.systemName,
+        systemSize: connection.systemSize,
+        service: 'Enphase',
+        owner: connection.user,
+        lastSync: connection.lastSyncAt,
+        data: latestSummary
+          ? {
+              timestamp: latestSummary.timestamp,
+              status: (latestSummary.metadata as any)?.status || 'normal',
+              energyToday: latestSummary.energy || 0,
+              energyLifetime: (latestSummary.metadata as any)?.energyLifetime || 0,
+              powerNow: latestSummary.power || 0,
+              consumptionToday: null,
+              consumptionNow: null,
+              batteryPercentage: null,
+              batteryPowerNow: null,
+            }
+          : null,
+      }
+    })
 
     return NextResponse.json({ systems })
   } catch (error: any) {

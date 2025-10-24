@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, memo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface CardProps {
@@ -8,7 +8,7 @@ interface CardProps {
   description?: string
 }
 
-export default function Card({ children, className, title, description }: CardProps) {
+function CardComponent({ children, className, title, description }: CardProps) {
   return (
     <div className={cn('rounded-lg border border-gray-200 bg-white p-6 shadow-sm', className)}>
       {title && (
@@ -21,3 +21,6 @@ export default function Card({ children, className, title, description }: CardPr
     </div>
   )
 }
+
+// Optimisation : Éviter les re-renders inutiles
+export default memo(CardComponent)
