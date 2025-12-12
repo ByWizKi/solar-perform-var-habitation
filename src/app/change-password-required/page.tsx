@@ -50,12 +50,12 @@ export default function ChangePasswordRequiredPage() {
       const data = await res.json()
 
       if (res.ok) {
-        // Recharger le profil utilisateur pour mettre  jour mustChangePassword
+        // Recharger le profil utilisateur pour mettre à jour mustChangePassword
         await reloadProfile()
 
-        // Rediriger selon le rle
+        // Rediriger selon le rôle
         if (user?.role === 'ADMIN') {
-          // Rediriger vers la connexion Enphase pour les admins (premire tape aprs changement de mot de passe)
+          // Rediriger vers la connexion Enphase pour les admins (première étape après changement de mot de passe)
           router.push('/connections/enphase/authorize')
         } else {
           // Super Admin et Viewer vont au dashboard
@@ -157,7 +157,7 @@ export default function ChangePasswordRequiredPage() {
             <div className="text-xs text-gray-600">
               <p className="font-medium mb-1">Le mot de passe doit contenir :</p>
               <ul className="list-disc list-inside space-y-1">
-                <li>Au moins 8 caractères</li>
+                <li>Au moins 8 caractres</li>
                 <li>Une lettre majuscule</li>
                 <li>Une lettre minuscule</li>
                 <li>Un chiffre</li>
@@ -169,7 +169,7 @@ export default function ChangePasswordRequiredPage() {
                 {isLoading ? 'Changement...' : 'Changer le mot de passe'}
               </Button>
               <Button type="button" variant="outline" onClick={logout}>
-                Se dconnecter
+                Se déconnecter
               </Button>
             </div>
           </form>
