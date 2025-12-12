@@ -20,6 +20,12 @@ export default function ProfilePage() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
+  // Vérifier si tous les champs sont remplis
+  const isFormValid =
+    passwordData.currentPassword.trim() !== '' &&
+    passwordData.newPassword.trim() !== '' &&
+    passwordData.confirmPassword.trim() !== ''
+
   useEffect(() => {
     if (!isLoading && !user) {
       router.push('/login')
@@ -143,7 +149,7 @@ export default function ProfilePage() {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={isChangingPassword}
+                disabled={isChangingPassword || !isFormValid}
                 className="w-full"
               >
                 {isChangingPassword ? 'Modification...' : 'Changer le mot de passe'}
