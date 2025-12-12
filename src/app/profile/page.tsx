@@ -58,11 +58,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-50">
       <Navigation />
 
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Mon Profil</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-900 mb-8">Mon Profil</h1>
 
         <div className="space-y-6">
           {/* Informations personnelles */}
@@ -70,17 +70,17 @@ export default function ProfilePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Prnom</p>
-                  <p className="mt-1 text-lg text-gray-900">{user.firstName}</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-500">Prnom</p>
+                  <p className="mt-1 text-lg text-gray-900 dark:text-gray-900">{user.firstName}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Nom</p>
-                  <p className="mt-1 text-lg text-gray-900">{user.lastName}</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-500">Nom</p>
+                  <p className="mt-1 text-lg text-gray-900 dark:text-gray-900">{user.lastName}</p>
                 </div>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500">Nom d&apos;utilisateur</p>
-                <p className="mt-1 text-lg text-gray-900">{user.username}</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-500">Nom d&apos;utilisateur</p>
+                <p className="mt-1 text-lg text-gray-900 dark:text-gray-900">{user.username}</p>
               </div>
             </div>
           </Card>
@@ -89,13 +89,13 @@ export default function ProfilePage() {
           <Card title="Changer le mot de passe">
             <form onSubmit={handlePasswordChange} className="space-y-4">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                <div className="bg-red-50 dark:bg-red-50 border border-red-200 dark:border-red-200 text-red-700 dark:text-red-700 px-4 py-3 rounded">
                   {error}
                 </div>
               )}
 
               {message && (
-                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+                <div className="bg-green-50 dark:bg-green-50 border border-green-200 dark:border-green-200 text-green-700 dark:text-green-700 px-4 py-3 rounded">
                   {message}
                 </div>
               )}
@@ -131,7 +131,7 @@ export default function ProfilePage() {
                 placeholder=""
               />
 
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-600">
                 <p>Le nouveau mot de passe doit contenir :</p>
                 <ul className="list-disc list-inside mt-1">
                   <li>Au moins 8 caractres</li>
