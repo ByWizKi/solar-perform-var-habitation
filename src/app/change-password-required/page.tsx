@@ -21,7 +21,7 @@ export default function ChangePasswordRequiredPage() {
 
     // Validation
     if (newPassword.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractres')
+      setError('Le mot de passe doit contenir au moins 8 caractères')
       return
     }
 
@@ -50,12 +50,12 @@ export default function ChangePasswordRequiredPage() {
       const data = await res.json()
 
       if (res.ok) {
-        // Recharger le profil utilisateur pour mettre  jour mustChangePassword
+        // Recharger le profil utilisateur pour mettre à jour mustChangePassword
         await reloadProfile()
 
-        // Rediriger selon le rle
+        // Rediriger selon le rôle
         if (user?.role === 'ADMIN') {
-          // Rediriger vers la connexion Enphase pour les admins (premire tape aprs changement de mot de passe)
+          // Rediriger vers la connexion Enphase pour les admins (première étape après changement de mot de passe)
           router.push('/connections/enphase/authorize')
         } else {
           // Super Admin et Viewer vont au dashboard
@@ -103,7 +103,7 @@ export default function ChangePasswordRequiredPage() {
             Changement de mot de passe requis
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600" style={{ color: '#6b7280' }}>
-            Pour des raisons de scurit, vous devez changer votre mot de passe avant de continuer
+            Pour des raisons de sécurité, vous devez changer votre mot de passe avant de continuer
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export default function ChangePasswordRequiredPage() {
               <p className="text-sm">
                 <strong>Bienvenue {user.firstName} !</strong>
                 <br />
-                Votre mot de passe temporaire doit tre chang.
+                Votre mot de passe temporaire doit être changé.
               </p>
             </div>
 
@@ -169,7 +169,7 @@ export default function ChangePasswordRequiredPage() {
                 {isLoading ? 'Changement...' : 'Changer le mot de passe'}
               </Button>
               <Button type="button" variant="outline" onClick={logout}>
-                Se dconnecter
+                Se déconnecter
               </Button>
             </div>
           </form>
