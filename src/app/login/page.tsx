@@ -41,7 +41,7 @@ export default function LoginPage() {
               <h1 className="text-4xl xl:text-5xl font-bold mb-6 text-white drop-shadow-lg">
                 Bienvenue sur
                 <br />
-                <span className="text-white">Var Habitat</span>
+                <span className="text-white">SolarPerform</span>
               </h1>
               <p className="text-xl text-white mb-8 leading-relaxed font-medium drop-shadow-md">
                 Votre solution de suivi de production solaire en temps réel
@@ -304,7 +304,7 @@ export default function LoginPage() {
                   <span className="font-semibold" style={{ color: '#4a9fbd' }}>
                     Var Habitat
                   </span>{' '}
-                  dveloppe par{' '}
+                  développée par{' '}
                   <span className="font-semibold" style={{ color: '#7b68a6' }}>
                     SolarPerform
                   </span>
