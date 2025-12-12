@@ -181,7 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Dconnexion
+  // Déconnexion
   const logout = async () => {
     const refreshTok = sessionStorage.getItem('refreshToken')
 

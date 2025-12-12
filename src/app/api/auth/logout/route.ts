@@ -13,19 +13,19 @@ export async function POST(req: NextRequest) {
     await revokeRefreshToken(validatedData.refreshToken)
 
     return NextResponse.json({
-      message: 'Dconnexion russie',
+      message: 'Déconnexion réussie',
     })
   } catch (error: any) {
-    // Même si le token n'existe pas, on considre la dconnexion comême russie
+    // Même si le token n'existe pas, on considère la déconnexion comme réussie
     if (error.code === 'P2025') {
       return NextResponse.json({
-        message: 'Dconnexion russie',
+        message: 'Déconnexion réussie',
       })
     }
 
-    console.error('Erreur lors de la dconnexion:', error)
+    console.error('Erreur lors de la déconnexion:', error)
     return NextResponse.json(
-      { error: 'Une erreur est survenue lors de la dconnexion' },
+      { error: 'Une erreur est survenue lors de la déconnexion' },
       { status: 500 }
     )
   }
