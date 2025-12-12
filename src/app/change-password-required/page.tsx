@@ -157,7 +157,7 @@ export default function ChangePasswordRequiredPage() {
             <div className="text-xs text-gray-600">
               <p className="font-medium mb-1">Le mot de passe doit contenir :</p>
               <ul className="list-disc list-inside space-y-1">
-                <li>Au moins 8 caractres</li>
+                <li>Au moins 8 caractères</li>
                 <li>Une lettre majuscule</li>
                 <li>Une lettre minuscule</li>
                 <li>Un chiffre</li>
