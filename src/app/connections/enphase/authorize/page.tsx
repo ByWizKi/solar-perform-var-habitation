@@ -40,7 +40,7 @@ export default function EnphaseAuthorizePage() {
 
         setAuthUrl(data.authUrl)
       } else {
-        setError('Erreur lors de la gnration de l&apos;URL d&apos;autorisation')
+        setError('Erreur lors de la génération de l&apos;URL d&apos;autorisation')
       }
     } catch (err) {
       setError('Une erreur est survenue')
@@ -74,7 +74,7 @@ export default function EnphaseAuthorizePage() {
             ) : (
               <div className="space-y-4">
                 <p className="text-gray-600 mb-6">
-                  Vous allez tre redirig vers Enphase Energy pour autoriser l&apos;accs  vos
+                  Vous allez être redirigé vers Enphase Energy pour autoriser l&apos;accès à vos
                   données de production solaire.
                 </p>
 
