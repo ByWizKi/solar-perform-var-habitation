@@ -31,7 +31,7 @@ export default function EnphaseAuthorizePage() {
       if (res.ok) {
         const data = await res.json()
 
-        // Si dj connect, rediriger vers le dashboard
+        // Si déjà connecté, rediriger vers le dashboard
         if (data.alreadyConnected) {
           console.log('[OK] Connexion Enphase existante détectée, redirection...')
           router.push(data.redirectUrl || '/dashboard')
@@ -40,7 +40,7 @@ export default function EnphaseAuthorizePage() {
 
         setAuthUrl(data.authUrl)
       } else {
-        setError('Erreur lors de la gnration de l&apos;URL d&apos;autorisation')
+        setError('Erreur lors de la génération de l&apos;URL d&apos;autorisation')
       }
     } catch (err) {
       setError('Une erreur est survenue')
@@ -60,7 +60,7 @@ export default function EnphaseAuthorizePage() {
       <div className="max-w-md w-full">
         <Card>
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Connexion  Enphase Energy</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Connexion Enphase Energy</h2>
 
             {loading ? (
               <p className="text-gray-600">Chargement...</p>
@@ -74,7 +74,7 @@ export default function EnphaseAuthorizePage() {
             ) : (
               <div className="space-y-4">
                 <p className="text-gray-600 mb-6">
-                  Vous allez tre redirig vers Enphase Energy pour autoriser l&apos;accs  vos
+                  Vous allez être redirigé vers Enphase Energy pour autoriser l&apos;accès à vos
                   données de production solaire.
                 </p>
 
@@ -82,7 +82,7 @@ export default function EnphaseAuthorizePage() {
                   <h3 className="font-medium text-blue-900 mb-2">Informations requises</h3>
                   <ul className="text-sm text-blue-800 text-left space-y-1">
                     <li> Identifiants Enlighten (compte Enphase)</li>
-                    <li> Autorisation d&apos;accs aux données du système</li>
+                    <li> Autorisation d&apos;accès aux données du système</li>
                   </ul>
                 </div>
 
