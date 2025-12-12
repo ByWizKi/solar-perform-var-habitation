@@ -176,16 +176,16 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-50">
       <Navigation />
 
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900" style={{ color: '#000000' }}>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-900" style={{ color: '#000000' }}>
               Administration
             </h1>
-            <p className="mt-2 text-gray-600" style={{ color: '#6b7280' }}>
+            <p className="mt-2 text-gray-600 dark:text-gray-600" style={{ color: '#6b7280' }}>
               Gérez les utilisateurs de la plateforme
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function AdminPage() {
         {/* Formulaire de création */}
         {showCreateForm && (
           <Card className="mb-8">
-            <h2 className="text-xl font-semibold mb-4" style={{ color: '#000000' }}>
+            <h2 className="text-xl font-semibold mb-4 dark:text-gray-900" style={{ color: '#000000' }}>
               Créer un nouvel utilisateur
             </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
@@ -248,7 +248,7 @@ export default function AdminPage() {
               />
               <div>
                 <label
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-2"
                   style={{ color: '#374151' }}
                 >
                   Rôle
@@ -256,7 +256,7 @@ export default function AdminPage() {
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-300 rounded-md bg-white dark:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   style={{ color: '#000000' }}
                 >
                   {isSuperAdmin() && <option value={UserRole.ADMIN}>Administrateur</option>}
@@ -279,48 +279,48 @@ export default function AdminPage() {
 
         {/* Liste des utilisateurs */}
         <Card>
-          <h2 className="text-xl font-semibold mb-4" style={{ color: '#000000' }}>
+          <h2 className="text-xl font-semibold mb-4 dark:text-gray-900" style={{ color: '#000000' }}>
             Utilisateurs
           </h2>
           {loadingUsers ? (
-            <p className="text-gray-500 text-center py-8">Chargement...</p>
+            <p className="text-gray-500 dark:text-gray-500 text-center py-8">Chargement...</p>
           ) : users.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Aucun utilisateur</p>
+            <p className="text-gray-500 dark:text-gray-500 text-center py-8">Aucun utilisateur</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
                       Nom
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
                       Nom d&apos;utilisateur
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
                       Rôle
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
                       Créé le
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-white divide-y divide-gray-200 dark:divide-gray-200">
                   {users.map((u) => (
                     <tr key={u.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div
-                          className="text-sm font-medium text-gray-900"
+                          className="text-sm font-medium text-gray-900 dark:text-gray-900"
                           style={{ color: '#000000' }}
                         >
                           {u.firstName} {u.lastName}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500" style={{ color: '#6b7280' }}>
+                        <div className="text-sm text-gray-500 dark:text-gray-500" style={{ color: '#6b7280' }}>
                           {u.username}
                         </div>
                       </td>
@@ -334,7 +334,7 @@ export default function AdminPage() {
                         </span>
                       </td>
                       <td
-                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-500"
                         style={{ color: '#6b7280' }}
                       >
                         {new Date(u.createdAt).toLocaleDateString('fr-FR')}
