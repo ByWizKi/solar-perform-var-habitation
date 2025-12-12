@@ -21,7 +21,7 @@ export default function ChangePasswordRequiredPage() {
 
     // Validation
     if (newPassword.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractres')
+      setError('Le mot de passe doit contenir au moins 8 caractères')
       return
     }
 
@@ -103,7 +103,7 @@ export default function ChangePasswordRequiredPage() {
             Changement de mot de passe requis
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600" style={{ color: '#6b7280' }}>
-            Pour des raisons de scurit, vous devez changer votre mot de passe avant de continuer
+            Pour des raisons de sécurité, vous devez changer votre mot de passe avant de continuer
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export default function ChangePasswordRequiredPage() {
               <p className="text-sm">
                 <strong>Bienvenue {user.firstName} !</strong>
                 <br />
-                Votre mot de passe temporaire doit tre chang.
+                Votre mot de passe temporaire doit être changé.
               </p>
             </div>
 
@@ -157,7 +157,7 @@ export default function ChangePasswordRequiredPage() {
             <div className="text-xs text-gray-600">
               <p className="font-medium mb-1">Le mot de passe doit contenir :</p>
               <ul className="list-disc list-inside space-y-1">
-                <li>Au moins 8 caractres</li>
+                <li>Au moins 8 caractères</li>
                 <li>Une lettre majuscule</li>
                 <li>Une lettre minuscule</li>
                 <li>Un chiffre</li>
