@@ -67,15 +67,7 @@ export class EnphaseDataCollector {
         throw new Error(`Erreur API Enphase (${response.status}): ${error}`)
       }
 
-      const data = await response.json()
-      
-      // Logger la réponse complète pour debug
-      if (connectionId) {
-        console.log(`  [RESPONSE] [RESPONSE] Réponse complète de ${endpoint}:`)
-        console.log(JSON.stringify(data, null, 2))
-      }
-
-      return data
+      return response.json()
     } catch (error: any) {
       // Nettoyer le timeout en cas d'erreur
       clearTimeout(timeoutId)
@@ -143,7 +135,6 @@ export class EnphaseDataCollector {
     systemId: string,
     accessToken: string
   ): Promise<void> {
-    console.log(`[FETCH] [SUMMARY] Récupération System Summary pour ${systemId}`)
     const summary = await this.fetchEnphaseAPI(
       `/api/v4/systems/${systemId}/summary`,
       accessToken,
@@ -151,16 +142,8 @@ export class EnphaseDataCollector {
       systemId
     )
 
-    console.log(`[STORE] [SUMMARY] Stockage des données Summary:`)
-    console.log(`  - energy_today: ${summary.energy_today} Wh`)
-    console.log(`  - current_power: ${summary.current_power} W`)
-    console.log(`  - energy_lifetime: ${summary.energy_lifetime} Wh`)
-    console.log(`  - status: ${summary.status}`)
-    console.log(`  - system_name: ${summary.system_name}`)
-    console.log(`  - size_w: ${summary.size_w} W`)
-
     // Stocker les données de production actuelles
-    const productionData = await prisma.productionData.create({
+    await prisma.productionData.create({
       data: {
         connectionId,
         connectionType: 'enphase',
@@ -177,7 +160,6 @@ export class EnphaseDataCollector {
         },
       },
     })
-    console.log(`[STORE] [OK] Production data créée avec ID: ${productionData.id}`)
 
     // Mettre  jour les infos système dans la connexion et lastSyncAt
     await prisma.enphaseConnection.update({
@@ -189,7 +171,6 @@ export class EnphaseDataCollector {
         lastSyncAt: new Date(), // Important pour la synchronisation avec les viewers
       },
     })
-    console.log(`[STORE] [OK] Connexion Enphase mise à jour`)
   }
 
   async fetchDevices(systemId: string, accessToken: string, connectionId?: string): Promise<any> {
@@ -283,10 +264,6 @@ export class EnphaseDataCollector {
     startDate?: Date,
     endDate?: Date
   ): Promise<void> {
-    console.log(`[FETCH] [LIFETIME] Récupération Energy Lifetime pour ${systemId}`)
-    if (startDate) console.log(`  - startDate: ${startDate.toISOString()}`)
-    if (endDate) console.log(`  - endDate: ${endDate.toISOString()}`)
-    
     let params = ''
     if (startDate) params += `?start_at=${Math.floor(startDate.getTime() / 1000)}`
     if (endDate) params += `&end_at=${Math.floor(endDate.getTime() / 1000)}`
@@ -297,17 +274,6 @@ export class EnphaseDataCollector {
       connectionId,
       systemId
     )
-
-    console.log(`[STORE] [LIFETIME] Données reçues:`)
-    console.log(`  - energy_lifetime (valeur totale): ${data.energy_lifetime} Wh`)
-    if (data.production && Array.isArray(data.production)) {
-      console.log(`  - production array: ${data.production.length} jours`)
-      console.log(`  - start_date: ${data.start_date}`)
-      if (data.production.length > 0) {
-        console.log(`  - Premier jour: ${data.production[0]} Wh`)
-        console.log(`  - Dernier jour: ${data.production[data.production.length - 1]} Wh`)
-      }
-    }
 
     // Mettre  jour le snapshot avec les données lifetime dans metadata
     if (data.energy_lifetime) {
@@ -327,9 +293,6 @@ export class EnphaseDataCollector {
             },
           },
         })
-        console.log(`[STORE] [OK] Metadata du summary mis à jour avec energyLifetime`)
-      } else {
-        console.log(`[WARN] [WARN] Aucun summary trouvé pour mettre à jour energyLifetime`)
       }
     }
   }
@@ -729,30 +692,17 @@ export class EnphaseDataCollector {
     systemId: string,
     accessToken: string
   ): Promise<{ apiCalls: number }> {
-    console.log('\n' + '='.repeat(80))
-    console.log(`[SYNC] [SYNC] SYNC INITIALE OPTIMISEE pour ${systemId}`)
-    console.log('='.repeat(80))
-    console.log(`[INFO] Connection ID: ${connectionId}`)
-    console.log(`[INFO] System ID: ${systemId}`)
-    console.log(`[INFO] Timestamp: ${new Date().toISOString()}`)
-    console.log('='.repeat(80) + '\n')
-    
+    console.log(`[SYNC] SYNC INITIALE OPTIMISEE pour le système ${systemId}`)
     let apiCalls = 0
 
     try {
       // 1. System Summary - Donnes actuelles (production aujourd'hui, puissance actuelle, lifetime)
-      // Contient: energy_today, current_power, energy_lifetime, status, system_name, system_size
-      console.log(`[STEP] [1/2] Récupération System Summary...`)
       await this.fetchAndStoreSystemSummary(connectionId, systemId, accessToken)
       apiCalls++
-      console.log(`[OK] [OK] Summary récupéré (données actuelles + lifetime) - ${apiCalls} appel(s) API\n`)
 
       // 2. Energy Lifetime - Rcupre les donnes lifetime (utilis pour calculer l'historique)
-      // L'API retourne un tableau de production par jour depuis le dbut
-      console.log(`[STEP] [2/2] Récupération Energy Lifetime...`)
       await this.fetchAndStoreEnergyLifetime(connectionId, systemId, accessToken)
       apiCalls++
-      console.log(`[OK] [OK] Energy Lifetime récupéré (pour historique 14 jours) - ${apiCalls} appel(s) API\n`)
 
       // Mettre jour lastSyncAt
       await prisma.enphaseConnection.update({
@@ -760,16 +710,10 @@ export class EnphaseDataCollector {
         data: { lastSyncAt: new Date() },
       })
 
-      console.log('='.repeat(80))
-      console.log(`[SUCCESS] [SUCCESS] SYNC INITIALE OPTIMISEE TERMINÉE`)
-      console.log(`[TOTAL] Total appels API: ${apiCalls} (gain: ~85% vs ancienne méthode)`)
-      console.log('='.repeat(80) + '\n')
-      
+      console.log(`[OK] SYNC INITIALE OPTIMISEE termine - ${apiCalls} API calls`)
       return { apiCalls }
     } catch (error) {
-      console.error('\n' + '='.repeat(80))
-      console.error('[ERREUR] [ERREUR] Erreur sync initiale optimisée:', error)
-      console.log('='.repeat(80) + '\n')
+      console.error('[ERREUR] Erreur sync initiale optimise:', error)
       throw error
     }
   }
