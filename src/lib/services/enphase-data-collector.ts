@@ -270,7 +270,9 @@ export class EnphaseDataCollector {
 
     const data = await this.fetchEnphaseAPI(
       `/api/v4/systems/${systemId}/energy_lifetime${params}`,
-      accessToken
+      accessToken,
+      connectionId,
+      systemId
     )
 
     // Mettre  jour le snapshot avec les données lifetime dans metadata
@@ -681,8 +683,45 @@ export class EnphaseDataCollector {
   }
 
   /**
+   * SYNC INITIALE OPTIMISEE - Rcupre uniquement les donnes ncessaires l'affichage
+   * Cot: 2 API calls seulement (au lieu de 10-15)
+   * Optimise pour respecter le quota Enphase (1000 hits/mois)
+   */
+  async syncInitialOptimized(
+    connectionId: string,
+    systemId: string,
+    accessToken: string
+  ): Promise<{ apiCalls: number }> {
+    console.log(`[SYNC] SYNC INITIALE OPTIMISEE pour le système ${systemId}`)
+    let apiCalls = 0
+
+    try {
+      // 1. System Summary - Donnes actuelles (production aujourd'hui, puissance actuelle, lifetime)
+      await this.fetchAndStoreSystemSummary(connectionId, systemId, accessToken)
+      apiCalls++
+
+      // 2. Energy Lifetime - Rcupre les donnes lifetime (utilis pour calculer l'historique)
+      await this.fetchAndStoreEnergyLifetime(connectionId, systemId, accessToken)
+      apiCalls++
+
+      // Mettre jour lastSyncAt
+      await prisma.enphaseConnection.update({
+        where: { id: connectionId },
+        data: { lastSyncAt: new Date() },
+      })
+
+      console.log(`[OK] SYNC INITIALE OPTIMISEE termine - ${apiCalls} API calls`)
+      return { apiCalls }
+    } catch (error) {
+      console.error('[ERREUR] Erreur sync initiale optimise:', error)
+      throw error
+    }
+  }
+
+  /**
    * SYNC COMPLTE - Rcupre TOUT l'historique (premire connexion)
    * Cot: 10-15 API calls
+   * NOTE: Utiliser syncInitialOptimized() pour la premire connexion (plus efficace)
    */
   async syncFullHistory(
     connectionId: string,
