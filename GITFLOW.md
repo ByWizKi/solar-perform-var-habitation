@@ -189,19 +189,19 @@ chore: nettoyage des fichiers temporaires
 ### Exemples invalides
 
 ```bash
-# ❌ Type manquant
+# Type manquant
 Update README
 
-# ❌ Type en majuscule
+# Type en majuscule
 Feat: nouvelle fonctionnalité
 
-# ❌ Point final
+# Point final
 feat: nouvelle fonctionnalité.
 
-# ❌ Première lettre en majuscule
+# Première lettre en majuscule
 feat: Nouvelle fonctionnalité
 
-# ❌ Type incorrect
+# Type incorrect
 update: modification du code
 ```
 
