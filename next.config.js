@@ -35,7 +35,8 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'standalone', // Pour Docker
+  // output: 'standalone' uniquement pour Docker, pas pour Vercel
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
 
   // Optimisations de performance
   compiler: {

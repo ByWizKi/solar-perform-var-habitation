@@ -73,13 +73,17 @@ function validateEnv() {
   }
 
   // Validation de l'URL de l'application en production
+  // Sur Vercel, VERCEL_URL est automatiquement fourni, donc on ne bloque pas si localhost
+  const isVercel = !!process.env.VERCEL || !!process.env.VERCEL_URL
   if (
     process.env.NODE_ENV === 'production' &&
+    !isVercel &&
     process.env.NEXT_PUBLIC_APP_URL?.startsWith('http://localhost')
   ) {
     throw new Error(
       `ERREUR DE CONFIGURATION: NEXT_PUBLIC_APP_URL ne peut pas être localhost en production\n` +
-        `Valeur actuelle: ${process.env.NEXT_PUBLIC_APP_URL}`
+        `Valeur actuelle: ${process.env.NEXT_PUBLIC_APP_URL}\n` +
+        `Sur Vercel, utilisez VERCEL_URL ou définissez NEXT_PUBLIC_APP_URL avec l'URL de production`
     )
   }
 
@@ -105,7 +109,11 @@ export const env = {
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET!,
 
   // Application
-  APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  // Sur Vercel, utiliser VERCEL_URL si disponible, sinon NEXT_PUBLIC_APP_URL
+  APP_URL:
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   NODE_ENV: process.env.NODE_ENV || 'development',
 
   // Enphase API
@@ -113,7 +121,12 @@ export const env = {
   ENPHASE_CLIENT_SECRET: process.env.ENPHASE_CLIENT_SECRET!,
   ENPHASE_API_KEY: process.env.ENPHASE_API_KEY!,
   ENPHASE_REDIRECT_URI:
-    process.env.ENPHASE_REDIRECT_URI || 'http://localhost:3000/api/connections/enphase/callback',
+    process.env.ENPHASE_REDIRECT_URI ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/connections/enphase/callback`
+      : process.env.NEXT_PUBLIC_APP_URL
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/api/connections/enphase/callback`
+        : 'http://localhost:3000/api/connections/enphase/callback'),
 } as const
 
 // Type pour TypeScript
