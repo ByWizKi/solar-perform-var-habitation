@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getEnphaseService } from '@/lib/services/enphase'
 import { getEnphaseDataCollector } from '@/lib/services/enphase-data-collector'
 import { prisma } from '@/lib/prisma'
+import { env } from '@/lib/env'
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
     const error = searchParams.get('error')
 
     if (error) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/connections?error=${error}`)
+      return NextResponse.redirect(`${env.APP_URL}/connections?error=${error}`)
     }
 
     if (!code || !state) {
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest) {
     if (allSystems.length === 0) {
       console.error('[ERREUR] Aucun système Enphase trouv pour cet utilisateur')
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/connections?error=no_systems`
+        `${env.APP_URL}/connections?error=no_systems`
       )
     }
 
@@ -107,11 +108,11 @@ export async function GET(req: NextRequest) {
     }
 
     // Rediriger immdiatement (la sync continue en arrire-plan)
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/?welcome=true`)
+    return NextResponse.redirect(`${env.APP_URL}/?welcome=true`)
   } catch (error) {
     console.error('Erreur lors du callback Enphase:', error)
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/connections?error=callback_failed`
+      `${env.APP_URL}/connections?error=callback_failed`
     )
   }
 }

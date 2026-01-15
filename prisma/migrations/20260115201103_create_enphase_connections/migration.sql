@@ -29,12 +29,12 @@ CREATE INDEX IF NOT EXISTS "enphase_connections_userId_idx" ON "enphase_connecti
 DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.table_constraints 
-        WHERE constraint_schema = 'public' 
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_schema = 'public'
         AND constraint_name = 'enphase_connections_userId_fkey'
     ) THEN
-        ALTER TABLE "enphase_connections" 
-        ADD CONSTRAINT "enphase_connections_userId_fkey" 
+        ALTER TABLE "enphase_connections"
+        ADD CONSTRAINT "enphase_connections_userId_fkey"
         FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
