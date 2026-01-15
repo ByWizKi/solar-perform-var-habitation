@@ -42,7 +42,7 @@ async function handler(req: AuthRequest) {
     // Toujours inclure le message d'erreur pour le débogage
     const errorMessage = error?.message || 'Erreur inconnue'
     const errorStack = error?.stack
-    
+
     // Logger l'erreur complète pour Vercel
     console.error('[AUTHORIZE] Erreur complète:', {
       message: errorMessage,
@@ -56,7 +56,7 @@ async function handler(req: AuthRequest) {
         vercelUrl: process.env.VERCEL_URL,
       },
     })
-    
+
     return NextResponse.json(
       {
         error: 'Une erreur est survenue lors de la génération de l\'URL d\'autorisation',
