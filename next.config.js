@@ -75,9 +75,10 @@ const nextConfig = {
   },
 
   // Gestion du cache pour les pages statiques
-  experimental: {
-    optimizeCss: true, // Optimiser le CSS avec Critters
-  },
+  // optimizeCss désactivé car nécessite critters et peut causer des problèmes sur Vercel
+  // experimental: {
+  //   optimizeCss: true,
+  // },
 }
 
 module.exports = nextConfig
