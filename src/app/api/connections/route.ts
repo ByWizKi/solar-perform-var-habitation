@@ -48,9 +48,21 @@ async function handler(req: AuthRequest) {
     }))
 
     return NextResponse.json({ connections: formattedConnections })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erreur lors de la récupération des connexions:', error)
-    return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
+    console.error('Error stack:', error?.stack)
+    console.error('Error message:', error?.message)
+    
+    return NextResponse.json(
+      {
+        error: 'Une erreur est survenue lors de la récupération des connexions',
+        ...(process.env.NODE_ENV === 'development' && {
+          details: error?.message,
+          stack: error?.stack,
+        }),
+      },
+      { status: 500 }
+    )
   }
 }
 
