@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { UserRole } from '@/types'
+import { Client } from 'pg'
 
 /**
  * Route pour créer manuellement la table enphase_connections si elle n'existe pas
@@ -22,14 +23,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Récupérer l'utilisateur pour vérifier son rôle
-    const prismaClient = new PrismaClient()
-    const user = await prismaClient.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       select: { role: true }
     })
 
     if (!user || user.role !== UserRole.SUPER_ADMIN) {
-      await prismaClient.$disconnect()
       return NextResponse.json(
         { error: 'Accès refusé. Permissions super-admin requises.' },
         { status: 403 }
@@ -40,21 +39,18 @@ export async function POST(request: NextRequest) {
     // Prisma Accelerate ne permet pas les opérations de schéma
     const directUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL
     if (!directUrl) {
-      await prismaClient.$disconnect()
       return NextResponse.json(
         { error: 'POSTGRES_URL non configuré pour les opérations de schéma' },
         { status: 500 }
       )
     }
 
-    // Créer un client Prisma avec la connexion directe
-    const prismaDirect = new PrismaClient({
-      datasources: {
-        db: {
-          url: directUrl
-        }
-      }
+    // Créer un client PostgreSQL direct pour exécuter les requêtes DDL
+    const pgClient = new Client({
+      connectionString: directUrl,
     })
+    
+    await pgClient.connect()
 
     // Script SQL complet pour corriger toutes les tables manquantes/colonnes manquantes
 
@@ -162,17 +158,16 @@ export async function POST(request: NextRequest) {
       END $$;
     `
 
-    // Exécuter toutes les requêtes SQL avec la connexion directe
-    await prismaDirect.$executeRawUnsafe(createEnphaseTableSQL)
-    await prismaDirect.$executeRawUnsafe(createEnphaseIndexesSQL)
-    await prismaDirect.$executeRawUnsafe(createEnphaseForeignKeySQL)
-    await prismaDirect.$executeRawUnsafe(addConnectionTypeSQL)
-    await prismaDirect.$executeRawUnsafe(addMetadataSQL)
-    await prismaDirect.$executeRawUnsafe(updateProductionDataForeignKeysSQL)
+    // Exécuter toutes les requêtes SQL avec la connexion PostgreSQL directe
+    await pgClient.query(createEnphaseTableSQL)
+    await pgClient.query(createEnphaseIndexesSQL)
+    await pgClient.query(createEnphaseForeignKeySQL)
+    await pgClient.query(addConnectionTypeSQL)
+    await pgClient.query(addMetadataSQL)
+    await pgClient.query(updateProductionDataForeignKeysSQL)
 
-    // Fermer les connexions
-    await prismaDirect.$disconnect()
-    await prismaClient.$disconnect()
+    // Fermer la connexion
+    await pgClient.end()
 
     return NextResponse.json({
       success: true,
