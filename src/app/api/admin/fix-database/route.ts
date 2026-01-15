@@ -34,8 +34,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Exécuter le script SQL pour créer la table
-    const createTableSQL = `
+    // Script SQL complet pour corriger toutes les tables manquantes/colonnes manquantes
+    
+    // 1. Créer la table enphase_connections si elle n'existe pas
+    const createEnphaseTableSQL = `
       CREATE TABLE IF NOT EXISTS "enphase_connections" (
         "id" TEXT NOT NULL,
         "userId" TEXT NOT NULL,
@@ -54,35 +56,101 @@ export async function POST(request: NextRequest) {
       );
     `
 
-    const createIndexesSQL = `
+    const createEnphaseIndexesSQL = `
       CREATE UNIQUE INDEX IF NOT EXISTS "enphase_connections_systemId_key" ON "enphase_connections"("systemId");
       CREATE UNIQUE INDEX IF NOT EXISTS "enphase_connections_userId_systemId_key" ON "enphase_connections"("userId", "systemId");
       CREATE INDEX IF NOT EXISTS "enphase_connections_userId_idx" ON "enphase_connections"("userId");
     `
 
-    const createForeignKeySQL = `
+    const createEnphaseForeignKeySQL = `
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.table_constraints
-          WHERE constraint_schema = 'public'
+          SELECT 1 FROM information_schema.table_constraints 
+          WHERE constraint_schema = 'public' 
           AND constraint_name = 'enphase_connections_userId_fkey'
         ) THEN
-          ALTER TABLE "enphase_connections"
-          ADD CONSTRAINT "enphase_connections_userId_fkey"
+          ALTER TABLE "enphase_connections" 
+          ADD CONSTRAINT "enphase_connections_userId_fkey" 
           FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
         END IF;
       END $$;
     `
 
-    // Exécuter les requêtes SQL
-    await prisma.$executeRawUnsafe(createTableSQL)
-    await prisma.$executeRawUnsafe(createIndexesSQL)
-    await prisma.$executeRawUnsafe(createForeignKeySQL)
+    // 2. Ajouter connectionType à production_data si elle n'existe pas
+    const addConnectionTypeSQL = `
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_schema = 'public' 
+          AND table_name = 'production_data' 
+          AND column_name = 'connectionType'
+        ) THEN
+          ALTER TABLE "production_data" 
+          ADD COLUMN "connectionType" TEXT NOT NULL DEFAULT 'enphase';
+          
+          UPDATE "production_data" 
+          SET "connectionType" = 'enphase' 
+          WHERE "connectionType" IS NULL OR "connectionType" = '';
+        END IF;
+      END $$;
+    `
+
+    // 3. Ajouter metadata à production_data si elle n'existe pas (pour compatibilité)
+    const addMetadataSQL = `
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_schema = 'public' 
+          AND table_name = 'production_data' 
+          AND column_name = 'metadata'
+        ) THEN
+          ALTER TABLE "production_data" 
+          ADD COLUMN "metadata" JSONB;
+        END IF;
+      END $$;
+    `
+
+    // 4. Mettre à jour les foreign keys de production_data pour pointer vers enphase_connections
+    const updateProductionDataForeignKeysSQL = `
+      DO $$
+      BEGIN
+        -- Supprimer l'ancienne foreign key vers service_connections si elle existe
+        IF EXISTS (
+          SELECT 1 FROM information_schema.table_constraints 
+          WHERE constraint_schema = 'public' 
+          AND constraint_name = 'production_data_connectionId_fkey'
+        ) THEN
+          ALTER TABLE "production_data" 
+          DROP CONSTRAINT "production_data_connectionId_fkey";
+        END IF;
+        
+        -- Ajouter la nouvelle foreign key vers enphase_connections si elle n'existe pas
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.table_constraints 
+          WHERE constraint_schema = 'public' 
+          AND constraint_name = 'production_data_connectionId_fkey'
+        ) THEN
+          ALTER TABLE "production_data" 
+          ADD CONSTRAINT "production_data_connectionId_fkey" 
+          FOREIGN KEY ("connectionId") REFERENCES "enphase_connections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+        END IF;
+      END $$;
+    `
+
+    // Exécuter toutes les requêtes SQL
+    await prisma.$executeRawUnsafe(createEnphaseTableSQL)
+    await prisma.$executeRawUnsafe(createEnphaseIndexesSQL)
+    await prisma.$executeRawUnsafe(createEnphaseForeignKeySQL)
+    await prisma.$executeRawUnsafe(addConnectionTypeSQL)
+    await prisma.$executeRawUnsafe(addMetadataSQL)
+    await prisma.$executeRawUnsafe(updateProductionDataForeignKeysSQL)
 
     return NextResponse.json({
       success: true,
-      message: 'Table enphase_connections créée avec succès'
+      message: 'Base de données corrigée avec succès : tables et colonnes créées/mises à jour'
     })
   } catch (error: any) {
     console.error('Erreur lors de la création de la table:', error)
