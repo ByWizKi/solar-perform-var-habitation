@@ -1,4 +1,5 @@
 import { prisma } from '../prisma'
+import { env } from '../env'
 
 // Configuration Enphase
 const ENPHASE_API_BASE = 'https://api.enphaseenergy.com'
@@ -340,12 +341,10 @@ export class EnphaseService {
 // Instance par dfaut
 export function getEnphaseService(): EnphaseService {
   const config: EnphaseConfig = {
-    clientId: process.env.ENPHASE_CLIENT_ID || '',
-    clientSecréet: process.env.ENPHASE_CLIENT_SECRET || '',
-    apiKey: process.env.ENPHASE_API_KEY || '',
-    redirectUri: `${
-      process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    }/api/connections/enphase/callback`,
+    clientId: env.ENPHASE_CLIENT_ID,
+    clientSecréet: env.ENPHASE_CLIENT_SECRET,
+    apiKey: env.ENPHASE_API_KEY,
+    redirectUri: env.ENPHASE_REDIRECT_URI,
   }
 
   return new EnphaseService(config)

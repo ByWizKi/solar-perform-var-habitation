@@ -34,9 +34,21 @@ async function handler(req: AuthRequest) {
     const authUrl = enphaseService.getAuthorizationUrl(userId)
 
     return NextResponse.json({ authUrl, alreadyConnected: false })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erreur lors de la gnration de l'URL d'autorisation:", error)
-    return NextResponse.json({ error: 'Une erreur est survenue' }, { status: 500 })
+    console.error("Error stack:", error?.stack)
+    console.error("Error message:", error?.message)
+    
+    return NextResponse.json(
+      {
+        error: 'Une erreur est survenue lors de la génération de l\'URL d\'autorisation',
+        ...(process.env.NODE_ENV === 'development' && {
+          details: error?.message,
+          stack: error?.stack,
+        }),
+      },
+      { status: 500 }
+    )
   }
 }
 
