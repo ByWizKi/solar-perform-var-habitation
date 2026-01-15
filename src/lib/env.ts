@@ -8,8 +8,8 @@
 let isValidated = false
 
 // Liste des variables d'environnement obligatoires
+// Note: DATABASE_URL ou PRISMA_DATABASE_URL doit être présent
 const requiredEnvVars = [
-  'DATABASE_URL',
   'JWT_SECRET',
   'JWT_REFRESH_SECRET',
   'ENPHASE_CLIENT_ID',
@@ -36,12 +36,26 @@ function validateEnv() {
     }
   }
 
-  // Validation spécifique du format de DATABASE_URL
-  if (!process.env.DATABASE_URL!.startsWith('postgresql://')) {
+  // Vérifier la présence de DATABASE_URL ou PRISMA_DATABASE_URL
+  const databaseUrl = process.env.PRISMA_DATABASE_URL || process.env.DATABASE_URL
+  if (!databaseUrl) {
     throw new Error(
-      `ERREUR DE CONFIGURATION: DATABASE_URL doit être une URL PostgreSQL valide\n` +
-        `Format attendu: postgresql://user:password@host:port/database\n` +
-        `Reçu: ${process.env.DATABASE_URL!.substring(0, 20)}...`
+      `ERREUR DE CONFIGURATION: DATABASE_URL ou PRISMA_DATABASE_URL doit être défini\n` +
+        `Pour Prisma Postgres, utilisez PRISMA_DATABASE_URL (avec Accelerate)`
+    )
+  }
+
+  // Validation spécifique du format de l'URL de base de données
+  const isValidPostgresUrl =
+    databaseUrl.startsWith('postgresql://') ||
+    databaseUrl.startsWith('postgres://') ||
+    databaseUrl.startsWith('prisma+postgres://')
+
+  if (!isValidPostgresUrl) {
+    throw new Error(
+      `ERREUR DE CONFIGURATION: URL de base de données invalide\n` +
+        `Format attendu: postgresql://... ou prisma+postgres://...\n` +
+        `Reçu: ${databaseUrl.substring(0, 30)}...`
     )
   }
 
@@ -102,7 +116,8 @@ validateEnv()
 // Export typé et sécurisé des variables d'environnement
 export const env = {
   // Base de données
-  DATABASE_URL: process.env.DATABASE_URL!,
+  // Utiliser PRISMA_DATABASE_URL si disponible (avec Accelerate), sinon DATABASE_URL
+  DATABASE_URL: process.env.PRISMA_DATABASE_URL || process.env.DATABASE_URL!,
 
   // JWT
   JWT_SECRET: process.env.JWT_SECRET!,
