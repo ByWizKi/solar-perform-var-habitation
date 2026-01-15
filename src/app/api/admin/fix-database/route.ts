@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
 import { verifyToken } from '@/lib/auth'
 import { UserRole } from '@/types'
 
@@ -22,20 +22,42 @@ export async function POST(request: NextRequest) {
     }
 
     // Récupérer l'utilisateur pour vérifier son rôle
-    const user = await prisma.user.findUnique({
+    const prismaClient = new PrismaClient()
+    const user = await prismaClient.user.findUnique({
       where: { id: payload.userId },
       select: { role: true }
     })
 
     if (!user || user.role !== UserRole.SUPER_ADMIN) {
+      await prismaClient.$disconnect()
       return NextResponse.json(
         { error: 'Accès refusé. Permissions super-admin requises.' },
         { status: 403 }
       )
     }
 
+    // Utiliser la connexion directe (POSTGRES_URL) pour les opérations DDL
+    // Prisma Accelerate ne permet pas les opérations de schéma
+    const directUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL
+    if (!directUrl) {
+      await prismaClient.$disconnect()
+      return NextResponse.json(
+        { error: 'POSTGRES_URL non configuré pour les opérations de schéma' },
+        { status: 500 }
+      )
+    }
+
+    // Créer un client Prisma avec la connexion directe
+    const prismaDirect = new PrismaClient({
+      datasources: {
+        db: {
+          url: directUrl
+        }
+      }
+    })
+
     // Script SQL complet pour corriger toutes les tables manquantes/colonnes manquantes
-    
+
     // 1. Créer la table enphase_connections si elle n'existe pas
     const createEnphaseTableSQL = `
       CREATE TABLE IF NOT EXISTS "enphase_connections" (
@@ -66,12 +88,12 @@ export async function POST(request: NextRequest) {
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.table_constraints 
-          WHERE constraint_schema = 'public' 
+          SELECT 1 FROM information_schema.table_constraints
+          WHERE constraint_schema = 'public'
           AND constraint_name = 'enphase_connections_userId_fkey'
         ) THEN
-          ALTER TABLE "enphase_connections" 
-          ADD CONSTRAINT "enphase_connections_userId_fkey" 
+          ALTER TABLE "enphase_connections"
+          ADD CONSTRAINT "enphase_connections_userId_fkey"
           FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
         END IF;
       END $$;
@@ -82,16 +104,16 @@ export async function POST(request: NextRequest) {
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns 
-          WHERE table_schema = 'public' 
-          AND table_name = 'production_data' 
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = 'public'
+          AND table_name = 'production_data'
           AND column_name = 'connectionType'
         ) THEN
-          ALTER TABLE "production_data" 
+          ALTER TABLE "production_data"
           ADD COLUMN "connectionType" TEXT NOT NULL DEFAULT 'enphase';
-          
-          UPDATE "production_data" 
-          SET "connectionType" = 'enphase' 
+
+          UPDATE "production_data"
+          SET "connectionType" = 'enphase'
           WHERE "connectionType" IS NULL OR "connectionType" = '';
         END IF;
       END $$;
@@ -102,12 +124,12 @@ export async function POST(request: NextRequest) {
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns 
-          WHERE table_schema = 'public' 
-          AND table_name = 'production_data' 
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = 'public'
+          AND table_name = 'production_data'
           AND column_name = 'metadata'
         ) THEN
-          ALTER TABLE "production_data" 
+          ALTER TABLE "production_data"
           ADD COLUMN "metadata" JSONB;
         END IF;
       END $$;
@@ -119,44 +141,48 @@ export async function POST(request: NextRequest) {
       BEGIN
         -- Supprimer l'ancienne foreign key vers service_connections si elle existe
         IF EXISTS (
-          SELECT 1 FROM information_schema.table_constraints 
-          WHERE constraint_schema = 'public' 
+          SELECT 1 FROM information_schema.table_constraints
+          WHERE constraint_schema = 'public'
           AND constraint_name = 'production_data_connectionId_fkey'
         ) THEN
-          ALTER TABLE "production_data" 
+          ALTER TABLE "production_data"
           DROP CONSTRAINT "production_data_connectionId_fkey";
         END IF;
-        
+
         -- Ajouter la nouvelle foreign key vers enphase_connections si elle n'existe pas
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.table_constraints 
-          WHERE constraint_schema = 'public' 
+          SELECT 1 FROM information_schema.table_constraints
+          WHERE constraint_schema = 'public'
           AND constraint_name = 'production_data_connectionId_fkey'
         ) THEN
-          ALTER TABLE "production_data" 
-          ADD CONSTRAINT "production_data_connectionId_fkey" 
+          ALTER TABLE "production_data"
+          ADD CONSTRAINT "production_data_connectionId_fkey"
           FOREIGN KEY ("connectionId") REFERENCES "enphase_connections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
         END IF;
       END $$;
     `
 
-    // Exécuter toutes les requêtes SQL
-    await prisma.$executeRawUnsafe(createEnphaseTableSQL)
-    await prisma.$executeRawUnsafe(createEnphaseIndexesSQL)
-    await prisma.$executeRawUnsafe(createEnphaseForeignKeySQL)
-    await prisma.$executeRawUnsafe(addConnectionTypeSQL)
-    await prisma.$executeRawUnsafe(addMetadataSQL)
-    await prisma.$executeRawUnsafe(updateProductionDataForeignKeysSQL)
+    // Exécuter toutes les requêtes SQL avec la connexion directe
+    await prismaDirect.$executeRawUnsafe(createEnphaseTableSQL)
+    await prismaDirect.$executeRawUnsafe(createEnphaseIndexesSQL)
+    await prismaDirect.$executeRawUnsafe(createEnphaseForeignKeySQL)
+    await prismaDirect.$executeRawUnsafe(addConnectionTypeSQL)
+    await prismaDirect.$executeRawUnsafe(addMetadataSQL)
+    await prismaDirect.$executeRawUnsafe(updateProductionDataForeignKeysSQL)
+
+    // Fermer les connexions
+    await prismaDirect.$disconnect()
+    await prismaClient.$disconnect()
 
     return NextResponse.json({
       success: true,
       message: 'Base de données corrigée avec succès : tables et colonnes créées/mises à jour'
     })
   } catch (error: any) {
-    console.error('Erreur lors de la création de la table:', error)
+    console.error('Erreur lors de la correction de la base de données:', error)
     return NextResponse.json(
       {
-        error: 'Erreur lors de la création de la table',
+        error: 'Erreur lors de la correction de la base de données',
         message: error.message
       },
       { status: 500 }
