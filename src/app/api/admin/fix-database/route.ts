@@ -1,23 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { requireAuth } from '@/lib/middleware'
-import { hasPermission } from '@/lib/permissions'
+import { withAuth, getUserFromRequest, AuthRequest } from '@/lib/middleware'
+import { UserRole } from '@/types'
 
 /**
  * Route pour créer manuellement la table enphase_connections si elle n'existe pas
  * Nécessite les permissions super-admin
  */
 export async function POST(request: NextRequest) {
-  try {
-    const user = await requireAuth(request)
-    
-    // Vérifier les permissions super-admin
-    if (!hasPermission(user, 'super-admin')) {
-      return NextResponse.json(
-        { error: 'Accès refusé. Permissions super-admin requises.' },
-        { status: 403 }
-      )
-    }
+  return withAuth(request, async (authReq: AuthRequest) => {
+    try {
+      const { userId } = getUserFromRequest(authReq)
+      
+      // Récupérer l'utilisateur pour vérifier son rôle
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true }
+      })
+      
+      if (!user || user.role !== UserRole.SUPER_ADMIN) {
+        return NextResponse.json(
+          { error: 'Accès refusé. Permissions super-admin requises.' },
+          { status: 403 }
+        )
+      }
 
     // Exécuter le script SQL pour créer la table
     const createTableSQL = `
@@ -65,18 +71,19 @@ export async function POST(request: NextRequest) {
     await prisma.$executeRawUnsafe(createIndexesSQL)
     await prisma.$executeRawUnsafe(createForeignKeySQL)
 
-    return NextResponse.json({
-      success: true,
-      message: 'Table enphase_connections créée avec succès'
-    })
-  } catch (error: any) {
-    console.error('Erreur lors de la création de la table:', error)
-    return NextResponse.json(
-      {
-        error: 'Erreur lors de la création de la table',
-        message: error.message
-      },
-      { status: 500 }
-    )
-  }
+      return NextResponse.json({
+        success: true,
+        message: 'Table enphase_connections créée avec succès'
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la création de la table:', error)
+      return NextResponse.json(
+        {
+          error: 'Erreur lors de la création de la table',
+          message: error.message
+        },
+        { status: 500 }
+      )
+    }
+  })
 }
