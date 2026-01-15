@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     console.error('Erreur lors de la connexion:', error)
     console.error('Error stack:', error.stack)
     console.error('Error message:', error.message)
-    
+
     return NextResponse.json(
       {
         error: 'Erreur système : impossible de se connecter. Veuillez ressayer.',
