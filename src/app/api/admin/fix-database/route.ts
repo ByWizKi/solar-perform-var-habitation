@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { withAuth, getUserFromRequest, AuthRequest } from '@/lib/middleware'
+import { verifyToken } from '@/lib/auth'
 import { UserRole } from '@/types'
 
 /**
@@ -8,22 +8,31 @@ import { UserRole } from '@/types'
  * Nécessite les permissions super-admin
  */
 export async function POST(request: NextRequest) {
-  return withAuth(request, async (authReq: AuthRequest) => {
-    try {
-      const { userId } = getUserFromRequest(authReq)
-      
-      // Récupérer l'utilisateur pour vérifier son rôle
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { role: true }
-      })
-      
-      if (!user || user.role !== UserRole.SUPER_ADMIN) {
-        return NextResponse.json(
-          { error: 'Accès refusé. Permissions super-admin requises.' },
-          { status: 403 }
-        )
-      }
+  try {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = await verifyToken(token)
+
+    if (!payload || !payload.userId) {
+      return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
+    }
+
+    // Récupérer l'utilisateur pour vérifier son rôle
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { role: true }
+    })
+
+    if (!user || user.role !== UserRole.SUPER_ADMIN) {
+      return NextResponse.json(
+        { error: 'Accès refusé. Permissions super-admin requises.' },
+        { status: 403 }
+      )
+    }
 
     // Exécuter le script SQL pour créer la table
     const createTableSQL = `
@@ -71,19 +80,18 @@ export async function POST(request: NextRequest) {
     await prisma.$executeRawUnsafe(createIndexesSQL)
     await prisma.$executeRawUnsafe(createForeignKeySQL)
 
-      return NextResponse.json({
-        success: true,
-        message: 'Table enphase_connections créée avec succès'
-      })
-    } catch (error: any) {
-      console.error('Erreur lors de la création de la table:', error)
-      return NextResponse.json(
-        {
-          error: 'Erreur lors de la création de la table',
-          message: error.message
-        },
-        { status: 500 }
-      )
-    }
-  })
+    return NextResponse.json({
+      success: true,
+      message: 'Table enphase_connections créée avec succès'
+    })
+  } catch (error: any) {
+    console.error('Erreur lors de la création de la table:', error)
+    return NextResponse.json(
+      {
+        error: 'Erreur lors de la création de la table',
+        message: error.message
+      },
+      { status: 500 }
+    )
+  }
 }
