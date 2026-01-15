@@ -65,6 +65,10 @@ async function main() {
 main()
   .catch((error) => {
     console.error('❌ Erreur lors du seed:', error)
+    if (error instanceof Error) {
+      console.error('Message:', error.message)
+      console.error('Stack:', error.stack)
+    }
     process.exit(1)
   })
   .finally(async () => {
