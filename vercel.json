@@ -1,5 +1,5 @@
 {
-  "buildCommand": "prisma generate && prisma migrate deploy && next build",
+  "buildCommand": "prisma generate --no-engine && prisma migrate deploy && next build",
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["cdg1"]
