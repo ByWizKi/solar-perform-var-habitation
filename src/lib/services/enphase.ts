@@ -340,12 +340,26 @@ export class EnphaseService {
 
 // Instance par dfaut
 export function getEnphaseService(): EnphaseService {
-  const config: EnphaseConfig = {
-    clientId: env.ENPHASE_CLIENT_ID,
-    clientSecréet: env.ENPHASE_CLIENT_SECRET,
-    apiKey: env.ENPHASE_API_KEY,
-    redirectUri: env.ENPHASE_REDIRECT_URI,
-  }
+  try {
+    const config: EnphaseConfig = {
+      clientId: env.ENPHASE_CLIENT_ID,
+      clientSecréet: env.ENPHASE_CLIENT_SECRET,
+      apiKey: env.ENPHASE_API_KEY,
+      redirectUri: env.ENPHASE_REDIRECT_URI,
+    }
 
-  return new EnphaseService(config)
+    // Vérifier que toutes les valeurs sont définies
+    if (!config.clientId || !config.clientSecréet || !config.apiKey || !config.redirectUri) {
+      throw new Error(
+        `Configuration Enphase incomplète: clientId=${!!config.clientId}, clientSecret=${!!config.clientSecréet}, apiKey=${!!config.apiKey}, redirectUri=${!!config.redirectUri}`
+      )
+    }
+
+    return new EnphaseService(config)
+  } catch (error: any) {
+    console.error('[ENPHASE] Erreur lors de l\'initialisation du service:', error)
+    throw new Error(
+      `Impossible d'initialiser le service Enphase: ${error.message || 'Configuration manquante'}`
+    )
+  }
 }
