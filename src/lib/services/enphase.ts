@@ -1,5 +1,25 @@
 import { prisma } from '../prisma'
-import { env } from '../env'
+
+// Import env de manière sécurisée pour éviter les erreurs au chargement
+let env: any
+try {
+  env = require('../env').env
+} catch (error) {
+  console.error('[ENPHASE] Erreur lors du chargement de env:', error)
+  // Fallback vers process.env directement
+  env = {
+    ENPHASE_CLIENT_ID: process.env.ENPHASE_CLIENT_ID || '',
+    ENPHASE_CLIENT_SECRET: process.env.ENPHASE_CLIENT_SECRET || '',
+    ENPHASE_API_KEY: process.env.ENPHASE_API_KEY || '',
+    ENPHASE_REDIRECT_URI:
+      process.env.ENPHASE_REDIRECT_URI ||
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api/connections/enphase/callback`
+        : process.env.NEXT_PUBLIC_APP_URL
+          ? `${process.env.NEXT_PUBLIC_APP_URL}/api/connections/enphase/callback`
+          : 'http://localhost:3000/api/connections/enphase/callback'),
+  }
+}
 
 // Configuration Enphase
 const ENPHASE_API_BASE = 'https://api.enphaseenergy.com'
