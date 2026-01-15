@@ -39,12 +39,30 @@ async function handler(req: AuthRequest) {
     console.error("Error stack:", error?.stack)
     console.error("Error message:", error?.message)
 
+    // Toujours inclure le message d'erreur pour le débogage
+    const errorMessage = error?.message || 'Erreur inconnue'
+    const errorStack = error?.stack
+    
+    // Logger l'erreur complète pour Vercel
+    console.error('[AUTHORIZE] Erreur complète:', {
+      message: errorMessage,
+      stack: errorStack,
+      name: error?.name,
+      env: {
+        hasClientId: !!process.env.ENPHASE_CLIENT_ID,
+        hasClientSecret: !!process.env.ENPHASE_CLIENT_SECRET,
+        hasApiKey: !!process.env.ENPHASE_API_KEY,
+        hasRedirectUri: !!process.env.ENPHASE_REDIRECT_URI,
+        vercelUrl: process.env.VERCEL_URL,
+      },
+    })
+    
     return NextResponse.json(
       {
         error: 'Une erreur est survenue lors de la génération de l\'URL d\'autorisation',
+        message: errorMessage,
         ...(process.env.NODE_ENV === 'development' && {
-          details: error?.message,
-          stack: error?.stack,
+          stack: errorStack,
         }),
       },
       { status: 500 }
