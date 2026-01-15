@@ -38,7 +38,7 @@ async function handler(req: AuthRequest) {
     console.error("Erreur lors de la gnration de l'URL d'autorisation:", error)
     console.error("Error stack:", error?.stack)
     console.error("Error message:", error?.message)
-    
+
     return NextResponse.json(
       {
         error: 'Une erreur est survenue lors de la génération de l\'URL d\'autorisation',
