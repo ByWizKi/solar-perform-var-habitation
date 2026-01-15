@@ -341,15 +341,40 @@ export class EnphaseService {
 // Instance par dfaut
 export function getEnphaseService(): EnphaseService {
   try {
+    // Récupérer les valeurs directement de process.env avec fallback sur env
+    const clientId = process.env.ENPHASE_CLIENT_ID || env.ENPHASE_CLIENT_ID
+    const clientSecret = process.env.ENPHASE_CLIENT_SECRET || env.ENPHASE_CLIENT_SECRET
+    const apiKey = process.env.ENPHASE_API_KEY || env.ENPHASE_API_KEY
+    const redirectUri =
+      process.env.ENPHASE_REDIRECT_URI ||
+      env.ENPHASE_REDIRECT_URI ||
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api/connections/enphase/callback`
+        : process.env.NEXT_PUBLIC_APP_URL
+          ? `${process.env.NEXT_PUBLIC_APP_URL}/api/connections/enphase/callback`
+          : 'http://localhost:3000/api/connections/enphase/callback')
+
     const config: EnphaseConfig = {
-      clientId: env.ENPHASE_CLIENT_ID,
-      clientSecréet: env.ENPHASE_CLIENT_SECRET,
-      apiKey: env.ENPHASE_API_KEY,
-      redirectUri: env.ENPHASE_REDIRECT_URI,
+      clientId,
+      clientSecréet: clientSecret,
+      apiKey,
+      redirectUri,
     }
 
     // Vérifier que toutes les valeurs sont définies
     if (!config.clientId || !config.clientSecréet || !config.apiKey || !config.redirectUri) {
+      console.error('[ENPHASE] Configuration incomplète:', {
+        clientId: !!config.clientId,
+        clientSecret: !!config.clientSecréet,
+        apiKey: !!config.apiKey,
+        redirectUri: !!config.redirectUri,
+        envKeys: {
+          ENPHASE_CLIENT_ID: !!process.env.ENPHASE_CLIENT_ID,
+          ENPHASE_CLIENT_SECRET: !!process.env.ENPHASE_CLIENT_SECRET,
+          ENPHASE_API_KEY: !!process.env.ENPHASE_API_KEY,
+          VERCEL_URL: process.env.VERCEL_URL,
+        },
+      })
       throw new Error(
         `Configuration Enphase incomplète: clientId=${!!config.clientId}, clientSecret=${!!config.clientSecréet}, apiKey=${!!config.apiKey}, redirectUri=${!!config.redirectUri}`
       )
@@ -358,6 +383,7 @@ export function getEnphaseService(): EnphaseService {
     return new EnphaseService(config)
   } catch (error: any) {
     console.error('[ENPHASE] Erreur lors de l\'initialisation du service:', error)
+    console.error('[ENPHASE] Stack:', error?.stack)
     throw new Error(
       `Impossible d'initialiser le service Enphase: ${error.message || 'Configuration manquante'}`
     )

@@ -27,13 +27,18 @@ function validateEnv() {
   }
 
   // Vérifier la présence de toutes les variables obligatoires
+  const missingVars: string[] = []
   for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
-      throw new Error(
-        `ERREUR DE CONFIGURATION: Variable d'environnement manquante: ${envVar}\n` +
-          `Consultez .env.example pour la configuration requise`
-      )
+      missingVars.push(envVar)
     }
+  }
+
+  if (missingVars.length > 0) {
+    const errorMsg = `ERREUR DE CONFIGURATION: Variables d'environnement manquantes: ${missingVars.join(', ')}\n` +
+      `Consultez .env.example pour la configuration requise`
+    console.error(errorMsg)
+    throw new Error(errorMsg)
   }
 
   // Vérifier la présence de DATABASE_URL ou PRISMA_DATABASE_URL
