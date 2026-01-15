@@ -1,10 +1,10 @@
 /**
  * Database seed script
  * Creates the initial super admin user if it doesn't exist
- * 
+ *
  * This script is idempotent and can be run multiple times safely.
  * It will only create the user if it doesn't already exist.
- * 
+ *
  * Usage:
  *   - Run manually: npx prisma db seed
  *   - Run on first deployment: Set SEED_DATABASE=true in environment variables

@@ -1,6 +1,6 @@
 /**
  * Database seed script - Run this once to initialize the database
- * 
+ *
  * Usage:
  *   npx tsx scripts/seed-database.ts
  */
