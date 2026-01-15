@@ -60,3 +60,6 @@ logs/
 .cache/
 .eslintcache
 tsconfig.tsbuildinfo
+
+# Documentation de déploiement (contient des informations sensibles)
+DEPLOY_VPS.md
