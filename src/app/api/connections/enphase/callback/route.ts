@@ -6,13 +6,16 @@ import { env } from '@/lib/env'
 
 export async function GET(req: NextRequest) {
   try {
+    // Utiliser l'origine de la requête actuelle au lieu de env.APP_URL
+    // Cela évite les problèmes avec les déploiements Vercel preview protégés
+    const origin = req.nextUrl.origin
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get('code')
     const state = searchParams.get('state') // userId
     const error = searchParams.get('error')
 
     if (error) {
-      return NextResponse.redirect(`${env.APP_URL}/connections?error=${error}`)
+      return NextResponse.redirect(`${origin}/connections?error=${error}`)
     }
 
     if (!code || !state) {
@@ -52,7 +55,7 @@ export async function GET(req: NextRequest) {
     if (allSystems.length === 0) {
       console.error('[ERREUR] Aucun système Enphase trouv pour cet utilisateur')
       return NextResponse.redirect(
-        `${env.APP_URL}/connections?error=no_systems`
+        `${origin}/connections?error=no_systems`
       )
     }
 
@@ -108,11 +111,14 @@ export async function GET(req: NextRequest) {
     }
 
     // Rediriger immdiatement (la sync continue en arrire-plan)
-    return NextResponse.redirect(`${env.APP_URL}/?welcome=true`)
+    // Utiliser l'origine de la requête pour éviter les problèmes avec Vercel preview
+    return NextResponse.redirect(`${origin}/?welcome=true`)
   } catch (error) {
     console.error('Erreur lors du callback Enphase:', error)
+    // Utiliser l'origine de la requête même en cas d'erreur
+    const origin = req.nextUrl.origin
     return NextResponse.redirect(
-      `${env.APP_URL}/connections?error=callback_failed`
+      `${origin}/connections?error=callback_failed`
     )
   }
 }
